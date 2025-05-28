@@ -1,4 +1,4 @@
-package star.carsharing.dto;
+package star.carsharing.dto.user;
 
 public record UserLoginResponseDto(
         String token

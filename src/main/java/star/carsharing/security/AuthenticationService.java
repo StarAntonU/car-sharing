@@ -5,8 +5,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import star.carsharing.dto.UserLoginRequestDto;
-import star.carsharing.dto.UserLoginResponseDto;
+import star.carsharing.dto.user.UserLoginRequestDto;
+import star.carsharing.dto.user.UserLoginResponseDto;
 
 @Service
 @RequiredArgsConstructor
