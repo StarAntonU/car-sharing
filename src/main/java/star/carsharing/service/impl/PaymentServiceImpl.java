@@ -79,6 +79,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public void paymentSuccess(String sessionId) throws NotificationException {
         Payment payment = paymentRepository.findBySessionId(sessionId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)

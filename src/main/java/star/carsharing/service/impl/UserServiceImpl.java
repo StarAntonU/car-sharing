@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import star.carsharing.dto.user.UpdateUserPassRequestDto;
 import star.carsharing.dto.user.UpdateUserRequestDto;
 import star.carsharing.dto.user.UpdateUserRoleRequestDto;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     @Override
+    @Transactional
     public UserDto register(UserRegisterRequestDto requestDto)
             throws RegistrationException {
         checkIfUserExists(requestDto);
@@ -47,6 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUserRole(Long id, UpdateUserRoleRequestDto requestDto) {
         User user = getUserFromDB(id);
         Role role = roleRepository.findByName(requestDto.role()).orElseThrow(
@@ -63,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long id, UpdateUserRequestDto requestDto) {
         User user = getUserFromDB(id);
         userMapper.updateUser(user, requestDto);
@@ -70,6 +74,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserPass(Long id, UpdateUserPassRequestDto requestDto) {
         User user = getUserFromDB(id);
         user.setPassword(passwordEncoder.encode(requestDto.password()));

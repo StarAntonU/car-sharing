@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import star.carsharing.dto.car.CarDto;
 import star.carsharing.dto.car.CreateCarDto;
 import star.carsharing.dto.car.UpdateCarInventoryDto;
@@ -20,6 +21,7 @@ public class CarServiceImpl implements CarService {
     private final CarMapper carMapper;
 
     @Override
+    @Transactional
     public CarDto add(CreateCarDto createCarDto) {
         Car car = carMapper.toModel(createCarDto);
         return carMapper.toDto(carRepository.save(car));
@@ -37,6 +39,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public CarDto updateCarById(CreateCarDto carDto, Long id) {
         Car car = getCarFromDB(id);
         carMapper.updateCar(car, carDto);
@@ -44,6 +47,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public CarDto updateCarInventory(UpdateCarInventoryDto carDto, Long id) {
         Car car = getCarFromDB(id);
         car.setInventory(carDto.inventory());
@@ -51,8 +55,9 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public void deleteCarById(Long id) {
-        Car car = getCarFromDB(id);
+        getCarFromDB(id);
         carRepository.deleteById(id);
     }
 

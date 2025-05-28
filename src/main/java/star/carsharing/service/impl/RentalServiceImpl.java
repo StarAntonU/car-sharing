@@ -51,14 +51,14 @@ public class RentalServiceImpl implements RentalService {
             throw new InsufficientQuantityException(
                     "Insufficient quantity of cars");
         }
-        car.setInventory(car.getInventory() - 1);
         Rental rental = new Rental();
         rental.setRentalDate(LocalDate.now());
         rental.setReturnDate(requestDto.returnDate());
-        rental.setCar(car);
         rental.setIsActive(ACTIVE);
         rental.setUser(user);
         notificationService.sentNotificationCreateRental(rental);
+        car.setInventory(car.getInventory() - 1);
+        rental.setCar(car);
         return rentalMapper.toResponseDto(rentalRepository.save(rental));
     }
 
@@ -84,12 +84,12 @@ public class RentalServiceImpl implements RentalService {
         if (!rentals.contains(rental)) {
             throw new ForbiddenOperationException("Access is denied");
         }
-        Car car = rental.getCar();
-        car.setInventory(car.getInventory() + 1);
-        carRepository.save(car);
         rental.setIsActive(INACTIVE);
         rental.setActualReturnDate(LocalDate.now());
         notificationService.sentNotificationClosedRental(rental);
+        Car car = rental.getCar();
+        car.setInventory(car.getInventory() + 1);
+        carRepository.save(car);
         return rentalMapper.toDtoWithActualReturnDate(rental);
     }
 
