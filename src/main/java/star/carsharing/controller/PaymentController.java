@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.model.User;
 import star.carsharing.service.PaymentService;
 
@@ -54,15 +53,13 @@ public class PaymentController {
 
     @GetMapping("/success")
     @Operation(summary = "View success", description = "View if the payment was success")
-    public void paymentSuccess(@RequestParam("session_id") String sessionId)
-            throws NotificationException {
+    public void paymentSuccess(@RequestParam("session_id") String sessionId) {
         paymentService.paymentSuccess(sessionId);
     }
 
     @GetMapping("/cancel")
     @Operation(summary = "View cancel", description = "View if the payment was cancel")
-    public void paymentCancel(@RequestParam("session_id") String sessionId)
-            throws NotificationException {
+    public void paymentCancel(@RequestParam("session_id") String sessionId) {
         paymentService.paymentCancel(sessionId);
     }
 

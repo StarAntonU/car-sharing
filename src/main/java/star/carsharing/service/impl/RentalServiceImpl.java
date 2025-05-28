@@ -12,7 +12,6 @@ import star.carsharing.dto.rental.CreateRentalRequestDto;
 import star.carsharing.dto.rental.RentalResponseDto;
 import star.carsharing.dto.rental.RentalResponseWithActualReturnDateDto;
 import star.carsharing.dto.rental.UserRentalIsActiveRequestDto;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.ForbiddenOperationException;
 import star.carsharing.exception.unchecked.InsufficientQuantityException;
@@ -40,8 +39,7 @@ public class RentalServiceImpl implements RentalService {
     @Override
     @Transactional
     public RentalResponseDto createRental(
-            Authentication authentication, CreateRentalRequestDto requestDto)
-            throws NotificationException {
+            Authentication authentication, CreateRentalRequestDto requestDto) {
         User user = (User) authentication.getPrincipal();
         if (rentalRepository.existsByUserIdAndIsActiveIsTrue(user.getId())) {
             throw new ForbiddenOperationException("You already have a rental car");
@@ -56,9 +54,9 @@ public class RentalServiceImpl implements RentalService {
         rental.setReturnDate(requestDto.returnDate());
         rental.setIsActive(ACTIVE);
         rental.setUser(user);
-        notificationService.sentNotificationCreateRental(rental);
         car.setInventory(car.getInventory() - 1);
         rental.setCar(car);
+        notificationService.sentNotificationCreateRental(rental);
         return rentalMapper.toResponseDto(rentalRepository.save(rental));
     }
 
@@ -74,8 +72,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     @Transactional
-    public RentalResponseWithActualReturnDateDto closeRental(Long userId, Long rentalId)
-            throws NotificationException {
+    public RentalResponseWithActualReturnDateDto closeRental(Long userId, Long rentalId) {
         List<Rental> rentals = rentalRepository.findAllByUserId(userId);
         Rental rental = getRentalFromDB(rentalId);
         if (!rental.getIsActive()) {

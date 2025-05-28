@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
 import star.carsharing.exception.unchecked.SessionFallException;
@@ -80,7 +79,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public void paymentSuccess(String sessionId) throws NotificationException {
+    public void paymentSuccess(String sessionId) {
         Payment payment = paymentRepository.findBySessionId(sessionId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)
         );
@@ -93,7 +92,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public void paymentCancel(String sessionId) throws NotificationException {
+    public void paymentCancel(String sessionId) {
         Payment payment = paymentRepository.findBySessionId(sessionId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)
         );

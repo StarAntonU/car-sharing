@@ -20,7 +20,6 @@ import star.carsharing.dto.rental.CreateRentalRequestDto;
 import star.carsharing.dto.rental.RentalResponseDto;
 import star.carsharing.dto.rental.RentalResponseWithActualReturnDateDto;
 import star.carsharing.dto.rental.UserRentalIsActiveRequestDto;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.model.User;
 import star.carsharing.service.RentalService;
 
@@ -35,8 +34,7 @@ public class RentalController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a rental", description = "Create a new rental")
     public RentalResponseDto createRental(
-            Authentication authentication, @RequestBody @Valid CreateRentalRequestDto requestDto)
-            throws NotificationException {
+            Authentication authentication, @RequestBody @Valid CreateRentalRequestDto requestDto) {
         return rentalService.createRental(authentication, requestDto);
     }
 
@@ -50,8 +48,7 @@ public class RentalController {
     @PostMapping("/{rentalId}/return")
     @Operation(summary = "Close the rental", description = "Close the rental by id")
     public RentalResponseWithActualReturnDateDto closeRental(
-            Authentication authentication, @PathVariable Long rentalId)
-            throws NotificationException {
+            Authentication authentication, @PathVariable Long rentalId) {
         return rentalService.closeRental(getUserId(authentication), rentalId);
     }
 

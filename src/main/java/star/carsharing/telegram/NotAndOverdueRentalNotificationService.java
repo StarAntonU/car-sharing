@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.model.Rental;
 import star.carsharing.model.Role;
 import star.carsharing.model.User;
@@ -20,7 +19,7 @@ public class NotAndOverdueRentalNotificationService {
     private final UserRepository userRepository;
 
     @Scheduled(cron = "0 0 8 * * *")
-    public void notificationNotOverdueRents() throws NotificationException {
+    public void notificationNotOverdueRents() {
         List<Rental> rentals = rentalRepository.findAllByReturnDateLessThan(LocalDate.now());
         for (Rental rental : rentals) {
             notificationService.sentNotificationNotOverdueRental(rental);
@@ -28,7 +27,7 @@ public class NotAndOverdueRentalNotificationService {
     }
 
     @Scheduled(cron = "0 0 9 * * *")
-    public void notificationOverdueRents() throws NotificationException {
+    public void notificationOverdueRents() {
         List<Rental> rentals =
                 rentalRepository.findAllByReturnDateGreaterThanEqual(LocalDate.now());
         List<User> users = userRepository.findAllByRoles(Role.RoleName.MANAGER);

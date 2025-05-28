@@ -7,17 +7,14 @@ import star.carsharing.dto.rental.CreateRentalRequestDto;
 import star.carsharing.dto.rental.RentalResponseDto;
 import star.carsharing.dto.rental.RentalResponseWithActualReturnDateDto;
 import star.carsharing.dto.rental.UserRentalIsActiveRequestDto;
-import star.carsharing.exception.checked.NotificationException;
 
 public interface RentalService {
     RentalResponseDto createRental(
-            Authentication authentication, CreateRentalRequestDto requestDto)
-            throws NotificationException;
+            Authentication authentication, CreateRentalRequestDto requestDto);
 
     RentalResponseDto getRentalById(Long userId, Long rentalId);
 
-    RentalResponseWithActualReturnDateDto closeRental(Long userId, Long rentalId)
-            throws NotificationException;
+    RentalResponseWithActualReturnDateDto closeRental(Long userId, Long rentalId);
 
     Page<RentalResponseDto> getUserRentalIsActive(
             UserRentalIsActiveRequestDto requestDto, Pageable pageable);

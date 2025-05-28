@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
+import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.model.Payment;
 import star.carsharing.model.Rental;
 import star.carsharing.model.User;
@@ -23,24 +23,24 @@ public class NotificationServiceImpl implements NotificationService {
     private String botToken;
 
     @Override
-    public void sentNotification(Long userId, String message) throws NotificationException {
+    public void sentNotification(Long userId, String message) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find user by id " + userId));
         String chatId = user.getTelegramChatId();
         if (chatId == null) {
-            throw new NotificationException("Chat id can`t by null");
+            throw new TelegramApiException("Chat id can`t by null");
         }
         String url = String.format("%s%s/sendMessage?chat_id=%s&text=%s",
                 TELEGRAM_API_URL, botToken, chatId, message);
         try {
             restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            throw new NotificationException("Can`t to send a notification", e);
+            throw new TelegramApiException("Can`t to send a notification", e);
         }
     }
 
     @Override
-    public void sentNotificationCreateRental(Rental rental) throws NotificationException {
+    public void sentNotificationCreateRental(Rental rental) {
         String message = String.format("""
                         Congratulations!\n 
                         You have rented a car %s %s.\n 
@@ -54,7 +54,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sentNotificationClosedRental(Rental rental) throws NotificationException {
+    public void sentNotificationClosedRental(Rental rental) {
         String message = String.format("""
                         You have returned the car %s %s.\n
                         We look forward to seeing you again.
@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sentNotificationOverdueRental(Rental rental) throws NotificationException {
+    public void sentNotificationOverdueRental(Rental rental) {
         String message = String.format("""
                         You were supposed to return the car %s %s on the %s!\n
                         You will have to pay a fine!!!
@@ -79,7 +79,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sentNotificationNotOverdueRental(Rental rental) throws NotificationException {
+    public void sentNotificationNotOverdueRental(Rental rental) {
         String message = String.format("""
                         Hello!\n
                         We are glad that you are using our cars.\n
@@ -91,26 +91,25 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sentSuccessesPayment(Payment payment) throws NotificationException {
+    public void sentSuccessesPayment(Payment payment) {
         String message = "Your payment was successful!";
         sentNotification(payment.getRental().getUser().getId(), message);
     }
 
     @Override
-    public void sentCancelPayment(Payment payment) throws NotificationException {
+    public void sentCancelPayment(Payment payment) {
         String message = "Your payment was cancelled!";
         sentNotification(payment.getRental().getUser().getId(), message);
     }
 
     @Override
-    public void sentNotificationToManagerNotOverdue(User user) throws NotificationException {
+    public void sentNotificationToManagerNotOverdue(User user) {
         String message = "No overdue rentals!";
         sentNotification(user.getId(), message);
     }
 
     @Override
-    public void sentNotificationToManagerOverdue(User user, Rental rental)
-            throws NotificationException {
+    public void sentNotificationToManagerOverdue(User user, Rental rental) {
         long days = ChronoUnit.DAYS.between(rental.getRentalDate(), LocalDate.now());
         String message = String.format("""
                 Rental is overdue %s days
