@@ -13,7 +13,6 @@ public record CreateCarDto(
         String brand,
         @NotNull
         Car.Type type,
-        @NotNull
         @Positive
         int inventory,
         @NotNull

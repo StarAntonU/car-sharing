@@ -23,6 +23,7 @@ import star.carsharing.repository.UserRepository;
 import star.carsharing.service.UserService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
@@ -31,7 +32,6 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
 
     @Override
-    @Transactional
     public UserDto register(UserRegisterRequestDto requestDto)
             throws RegistrationException {
         checkIfUserExists(requestDto);
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
+
     public UserDto updateUserRole(Long id, UpdateUserRoleRequestDto requestDto) {
         User user = getUserFromDB(id);
         Role role = roleRepository.findByName(requestDto.role()).orElseThrow(
@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public UserDto updateUser(Long id, UpdateUserRequestDto requestDto) {
         User user = getUserFromDB(id);
         userMapper.updateUser(user, requestDto);
@@ -74,7 +73,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUserPass(Long id, UpdateUserPassRequestDto requestDto) {
         User user = getUserFromDB(id);
         user.setPassword(passwordEncoder.encode(requestDto.password()));

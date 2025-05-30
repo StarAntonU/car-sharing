@@ -26,6 +26,7 @@ import star.carsharing.service.StripePaymentService;
 import star.carsharing.telegram.NotificationService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private static final BigDecimal FINE_MULTIPLIER = new BigDecimal("1.5");
@@ -37,7 +38,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final NotificationService notificationService;
 
     @Override
-    @Transactional
     public PaymentResponseDto createSession(Long userId, PaymentRequestDto requestDto) {
         Rental rental = rentalRepository.findByIdAndUserId(requestDto.rentalId(), userId)
                 .orElseThrow(
@@ -78,7 +78,6 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
     public void paymentSuccess(String sessionId) {
         Payment payment = paymentRepository.findBySessionId(sessionId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)

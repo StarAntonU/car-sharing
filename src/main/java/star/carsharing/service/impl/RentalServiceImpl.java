@@ -25,6 +25,7 @@ import star.carsharing.service.RentalService;
 import star.carsharing.telegram.NotificationService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
     private static final boolean ACTIVE = true;
@@ -37,7 +38,6 @@ public class RentalServiceImpl implements RentalService {
     private final NotificationService notificationService;
 
     @Override
-    @Transactional
     public RentalResponseDto createRental(
             Authentication authentication, CreateRentalRequestDto requestDto) {
         User user = (User) authentication.getPrincipal();
@@ -71,7 +71,6 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    @Transactional
     public RentalResponseWithActualReturnDateDto closeRental(Long userId, Long rentalId) {
         List<Rental> rentals = rentalRepository.findAllByUserId(userId);
         Rental rental = getRentalFromDB(rentalId);

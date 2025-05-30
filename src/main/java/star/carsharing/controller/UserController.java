@@ -33,6 +33,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/all")
+    @Operation(summary = "View list users", description = "View list of all users")
     public Page<UserDto> getAllUsers(Pageable pageable) {
         return userService.getAllUsers(pageable);
     }
@@ -72,4 +73,3 @@ public class UserController {
         return user.getId();
     }
 }
-

@@ -39,7 +39,7 @@ public class CarController {
     }
 
     @GetMapping
-    @Operation(summary = "View cars", description = "View list of all cars information")
+    @Operation(summary = "View cars", description = "View list of all cars")
     public Page<CarDto> getAllCars(Pageable pageable) {
         return carService.getAllCars(pageable);
     }
@@ -54,7 +54,7 @@ public class CarController {
     @PreAuthorize("hasRole('MANAGER')")
     @Operation(summary = "Update a car by id",
             description = "You can change any parameter in the car")
-    public CarDto updateCarById(@RequestBody CreateCarDto carDto, @PathVariable Long id) {
+    public CarDto updateCarById(@RequestBody @Valid CreateCarDto carDto, @PathVariable Long id) {
         return carService.updateCarById(carDto, id);
     }
 
@@ -74,4 +74,3 @@ public class CarController {
         carService.deleteCarById(id);
     }
 }
-

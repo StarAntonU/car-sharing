@@ -15,13 +15,13 @@ import star.carsharing.repository.CarRepository;
 import star.carsharing.service.CarService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
 
     @Override
-    @Transactional
     public CarDto add(CreateCarDto createCarDto) {
         Car car = carMapper.toModel(createCarDto);
         return carMapper.toDto(carRepository.save(car));
@@ -39,7 +39,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    @Transactional
     public CarDto updateCarById(CreateCarDto carDto, Long id) {
         Car car = getCarFromDB(id);
         carMapper.updateCar(car, carDto);
@@ -47,7 +46,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    @Transactional
     public CarDto updateCarInventory(UpdateCarInventoryDto carDto, Long id) {
         Car car = getCarFromDB(id);
         car.setInventory(carDto.inventory());
@@ -55,7 +53,6 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    @Transactional
     public void deleteCarById(Long id) {
         getCarFromDB(id);
         carRepository.deleteById(id);
