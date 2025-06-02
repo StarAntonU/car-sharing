@@ -49,7 +49,7 @@ public class RentalServiceImpl implements RentalService {
             throw new InsufficientQuantityException(
                     "Insufficient quantity of cars");
         }
-        Rental rental = new Rental();
+        Rental rental = rentalMapper.toModel(requestDto);
         rental.setRentalDate(LocalDate.now());
         rental.setReturnDate(requestDto.returnDate());
         rental.setIsActive(ACTIVE);

@@ -17,13 +17,13 @@ public class CarTestUtil {
         );
     }
 
-    public static Car car(Long carId) {
+    public static Car car(Long carId, int inventory) {
         Car car = new Car();
         car.setId(carId);
         car.setModel("X5");
         car.setBrand("BMW");
         car.setType(Car.Type.HATCHBACK);
-        car.setInventory(1);
+        car.setInventory(inventory);
         car.setDailyFee(BigDecimal.valueOf(123.09));
         return car;
     }

@@ -60,7 +60,7 @@ public class CarServiceTest {
     @Test
     @DisplayName("Verify method getAllCars with correct data")
     public void getAllCars_CorrectData_ReturnPageAllCarsDto() {
-        Car car = car(1L);
+        Car car = car(1L, 1);
         CarDto expected = mapCarToCarDto(car);
         Pageable pageable = PageRequest.of(0, 10);
         List<Car> cars = List.of(car);
@@ -79,7 +79,7 @@ public class CarServiceTest {
     @DisplayName("Verify method findCarById with correct data")
     public void findCarById_CorrectData_ReturnValidCarDto() {
         Long carId = 1L;
-        Car car = car(carId);
+        Car car = car(carId, 1);
         CarDto expected = mapCarToCarDto(car);
 
         when(carRepository.findById(carId)).thenReturn(Optional.of(car));
@@ -92,7 +92,7 @@ public class CarServiceTest {
     @Test
     @DisplayName("""
             Verify method findCarById with incorrect data.
-            Car with the id  not exist
+             Car with the id not exist
             """)
     public void findCarById_IncorrectData_ReturnException() {
         Long carId = 325L;
@@ -142,7 +142,7 @@ public class CarServiceTest {
     @DisplayName("Verify method deleteCarById with correct data")
     public void deleteCarById_CorrectData_NoReturn() {
         Long carId = 1L;
-        Car car = car(carId);
+        Car car = car(carId, 1);
 
         when(carRepository.findById(carId)).thenReturn(Optional.of(car));
         carService.deleteCarById(carId);
