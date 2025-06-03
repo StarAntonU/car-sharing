@@ -15,7 +15,6 @@ import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
-import star.carsharing.exception.unchecked.SessionFallException;
 import star.carsharing.mapper.PaymentMapper;
 import star.carsharing.model.Payment;
 import star.carsharing.model.Rental;
@@ -47,12 +46,8 @@ public class PaymentServiceImpl implements PaymentService {
                 );
         BigDecimal amount = calculateAmount(rental, requestDto.paymentType());
         SessionCreateParams sessionCreateParams = stripePaymentService.createSessionParams(amount);
-        Session session = null;
-        try {
-            session = Session.create(sessionCreateParams);
-        } catch (StripeException e) {
-            throw new SessionFallException("Can`t create Stripe Session", e);
-        }
+        Session session = stripePaymentService.makeSession(sessionCreateParams);
+
         Payment payment = paymentMapper.toModel(requestDto);
         payment.setStatus(Payment.Status.PENDING);
         payment.setType(requestDto.paymentType());

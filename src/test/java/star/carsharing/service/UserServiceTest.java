@@ -212,7 +212,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("Verify method updateUserPass with correct data")
-    public void updateUserPass_CorrectData_NoReturn() {
+    public void updateUserPass_CorrectData_ReturnStatus() {
         UpdateUserPassRequestDto updateUserPassDto = updateUserPassRequestDto();
         User user = mapUpdateUserPassRequestDtoToUser(updateUserPassDto);
         String codePass = passwordEncoder.encode(user.getPassword());

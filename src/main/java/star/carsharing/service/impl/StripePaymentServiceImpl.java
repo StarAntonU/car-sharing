@@ -1,10 +1,13 @@
 package star.carsharing.service.impl;
 
 import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import star.carsharing.exception.unchecked.SessionFallException;
 import star.carsharing.service.StripePaymentService;
 
 @Service
@@ -17,6 +20,17 @@ public class StripePaymentServiceImpl implements StripePaymentService {
     private String successUrl;
     @Value("${payment.cancel.url}")
     private String cancelUrl;
+
+    @Override
+    public Session makeSession(SessionCreateParams params) {
+        Session session = null;
+        try {
+            session = Session.create(params);
+        } catch (StripeException e) {
+            throw new SessionFallException("Can`t create Stripe Session", e);
+        }
+        return session;
+    }
 
     @Override
     public SessionCreateParams createSessionParams(BigDecimal amount) {
