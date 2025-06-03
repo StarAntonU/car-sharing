@@ -34,4 +34,11 @@ public class AuthTestUtil {
         role.setName(Role.RoleName.CUSTOMER);
         return role;
     }
+
+    public static Role roleManager() {
+        Role role = new Role();
+        role.setId(1L);
+        role.setName(Role.RoleName.MANAGER);
+        return role;
+    }
 }

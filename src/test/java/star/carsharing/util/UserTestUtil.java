@@ -1,6 +1,7 @@
 package star.carsharing.util;
 
 import static star.carsharing.util.AuthTestUtil.roleCustomer;
+import static star.carsharing.util.AuthTestUtil.roleManager;
 
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,18 @@ import star.carsharing.model.Role;
 import star.carsharing.model.User;
 
 public class UserTestUtil {
+    public static User userManager() {
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("manager@email.com");
+        user.setFirstName("manager");
+        user.setLastName("manager");
+        user.setPassword("$2a$12$wdHo5USWTk.k9vdFPupg6uGSzBzxXfTS/Gy2D1ijzxzpoYZ39GZL6");
+        user.setTelegramChatId("1234567890");
+        user.setRoles(Set.of(roleManager()));
+        return user;
+    }
+
     public static UserRegisterRequestDto userRegisterDto() {
         return new UserRegisterRequestDto(
                 "test@email.com",
