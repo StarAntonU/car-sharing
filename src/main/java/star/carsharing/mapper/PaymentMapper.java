@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import star.carsharing.config.MapperConfig;
 import star.carsharing.dto.payment.PaymentDto;
+import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
 import star.carsharing.model.Payment;
 
@@ -13,4 +14,7 @@ public interface PaymentMapper {
 
     @Mapping(target = "rentalId", source = "rental.id")
     PaymentDto toDto(Payment payment);
+
+    @Mapping(target = "rental.id", source = "rentalId")
+    Payment toModel(PaymentRequestDto dto);
 }

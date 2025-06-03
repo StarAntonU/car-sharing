@@ -28,6 +28,18 @@ public class RentalTestUnit {
         return rental;
     }
 
+    public static Rental closedRental(User user, Car car) {
+        Rental rental = new Rental();
+        rental.setId(1L);
+        rental.setRentalDate(LocalDate.of(2025, 5, 15));
+        rental.setReturnDate(LocalDate.of(2025, 5, 16));
+        rental.setActualReturnDate(LocalDate.of(2025, 5, 17));
+        rental.setUser(user);
+        rental.setCar(car);
+        rental.setIsActive(false);
+        return rental;
+    }
+
     public static UserRentalIsActiveRequestDto userRentalIsActiveRequestDto(
             Long id, boolean isActive) {
         return new UserRentalIsActiveRequestDto(

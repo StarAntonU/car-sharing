@@ -53,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (StripeException e) {
             throw new SessionFallException("Can`t create Stripe Session", e);
         }
-        Payment payment = new Payment();
+        Payment payment = paymentMapper.toModel(requestDto);
         payment.setStatus(Payment.Status.PENDING);
         payment.setType(requestDto.paymentType());
         payment.setRental(rental);
