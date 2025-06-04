@@ -62,7 +62,7 @@ public class CarController {
     @PreAuthorize("hasRole('MANAGER')")
     @Operation(summary = "Update a car invention", description = "Update a car invention by id")
     public CarDto updateCarsInventory(
-            @RequestBody UpdateCarInventoryDto carDto, @PathVariable Long id) {
+            @RequestBody @Valid UpdateCarInventoryDto carDto, @PathVariable Long id) {
         return carService.updateCarInventory(carDto, id);
     }
 

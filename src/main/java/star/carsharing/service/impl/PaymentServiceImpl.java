@@ -1,6 +1,5 @@
 package star.carsharing.service.impl;
 
-import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
@@ -29,7 +28,6 @@ import star.carsharing.telegram.NotificationService;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private static final BigDecimal FINE_MULTIPLIER = new BigDecimal("1.5");
-    private static final String STATUS_PAY = "paid";
     private final RentalRepository rentalRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
@@ -77,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findBySessionId(sessionId).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)
         );
-        if (!isPaymentSessionPaid(sessionId)) {
+        if (!stripePaymentService.isPaymentSessionPaid(sessionId)) {
             throw new PaymentException("Payment isn`t successful for sessionId: " + sessionId);
         }
         payment.setStatus(Payment.Status.PAID);
@@ -106,14 +104,5 @@ public class PaymentServiceImpl implements PaymentService {
             amount = amount.add(fineAmount);
         }
         return amount;
-    }
-
-    private boolean isPaymentSessionPaid(String sessionId) {
-        try {
-            Session session = Session.retrieve(sessionId);
-            return STATUS_PAY.equals(session.getPaymentStatus());
-        } catch (StripeException e) {
-            throw new RuntimeException("Can`t retrieve Stripe session by id " + sessionId, e);
-        }
     }
 }

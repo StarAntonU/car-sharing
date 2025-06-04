@@ -13,6 +13,7 @@ import star.carsharing.service.StripePaymentService;
 @Service
 public class StripePaymentServiceImpl implements StripePaymentService {
     private static final String CURRENCY = "usd";
+    private static final String STATUS_PAY = "paid";
     private static final String PRODUCT_NAME = "Car Rental Payment";
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
@@ -30,6 +31,16 @@ public class StripePaymentServiceImpl implements StripePaymentService {
             throw new SessionFallException("Can`t create Stripe Session", e);
         }
         return session;
+    }
+
+    @Override
+    public boolean isPaymentSessionPaid(String sessionId) {
+        try {
+            Session session = Session.retrieve(sessionId);
+            return STATUS_PAY.equals(session.getPaymentStatus());
+        } catch (StripeException e) {
+            throw new RuntimeException("Can`t retrieve Stripe session by id " + sessionId, e);
+        }
     }
 
     @Override

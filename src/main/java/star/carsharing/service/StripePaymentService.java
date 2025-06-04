@@ -7,5 +7,7 @@ import java.math.BigDecimal;
 public interface StripePaymentService {
     Session makeSession(SessionCreateParams params);
 
+    boolean isPaymentSessionPaid(String sessionId);
+
     SessionCreateParams createSessionParams(BigDecimal amount);
 }

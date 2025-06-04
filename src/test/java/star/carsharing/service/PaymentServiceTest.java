@@ -2,6 +2,7 @@ package star.carsharing.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,6 +36,7 @@ import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
+import star.carsharing.exception.unchecked.PaymentException;
 import star.carsharing.mapper.PaymentMapper;
 import star.carsharing.model.Car;
 import star.carsharing.model.Payment;
@@ -112,7 +114,7 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method createSession with correct data.
+            Verify method createSession with incorrect data.
              Rental by id and user id not exist
             """)
     public void createSession_IncorrectData_ReturnException() {
@@ -148,7 +150,7 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method getPaymentById with correct data.
+            Verify method getPaymentById with incorrect data.
              Payment by id is not exist
             """)
     public void getPaymentById_IncorrectData_ReturnException() {
@@ -207,6 +209,63 @@ public class PaymentServiceTest {
         when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.empty());
         Exception actual = assertThrows(EntityNotFoundException.class,
                 () -> paymentService.paymentCancel(sessionId));
+
+        String expected = "Can`t find session by id " + sessionId;
+        assertEquals(expected, actual.getMessage());
+    }
+
+    @Test
+    @DisplayName("Verify method paymentSuccess with correct data")
+    public void paymentSuccess_CorrectData_ReturnStatus() {
+        String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
+        User user = (User) userDetails();
+        Car car = car(1L, 1);
+        Rental rental = closedRental(user, car);
+        Payment payment = payment(rental);
+
+        when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.of(payment));
+        when(stripePaymentService.isPaymentSessionPaid(sessionId)).thenReturn(true);
+        when(paymentRepository.save(payment)).thenReturn(payment);
+        paymentService.paymentSuccess(sessionId);
+
+        verify(paymentRepository, times(1)).findBySessionId(sessionId);
+        verify(stripePaymentService, times(1)).isPaymentSessionPaid(any());
+        verify(notificationService, times(1)).sentSuccessesPayment(any());
+        verify(paymentRepository, times(1)).save(payment);
+    }
+
+    @Test
+    @DisplayName("""
+            Verify method paymentSuccess with incorrect data.
+             Payment isn`t successful
+            """)
+    public void paymentSuccess_IncorrectDataPaymentNotPaid_ReturnStatus() {
+        String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
+        User user = (User) userDetails();
+        Car car = car(1L, 1);
+        Rental rental = closedRental(user, car);
+        Payment payment = payment(rental);
+
+        when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.of(payment));
+        when(stripePaymentService.isPaymentSessionPaid(sessionId)).thenReturn(false);
+        Exception actual = assertThrows(PaymentException.class,
+                () -> paymentService.paymentSuccess(sessionId));
+
+        String expected = "Payment isn`t successful for sessionId: " + sessionId;
+        assertEquals(expected, actual.getMessage());
+    }
+
+    @Test
+    @DisplayName("""
+            Verify method paymentSuccess with incorrect data.
+             Payment by id is not exist
+            """)
+    public void paymentSuccess_IncorrectData_ReturnStatus() {
+        String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
+
+        when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.empty());
+        Exception actual = assertThrows(EntityNotFoundException.class,
+                () -> paymentService.paymentSuccess(sessionId));
 
         String expected = "Can`t find session by id " + sessionId;
         assertEquals(expected, actual.getMessage());

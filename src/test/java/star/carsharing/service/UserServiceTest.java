@@ -77,7 +77,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method register with correct data.
+            Verify method register with incorrect data.
              User is exist
             """)
     public void register_IncorrectDataUserIsExist_ReturnException() {
@@ -93,7 +93,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method register with correct data.
+            Verify method register with incorrect data.
              Role is exist
             """)
     public void register_IncorrectDataRoleIsExist_ReturnException() {
@@ -149,7 +149,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method updateUserRole with correct data.
+            Verify method updateUserRole with incorrect data.
              User is not exist
             """)
     public void updateUserRole_IncorrectDataUserNotExist_ReturnException() {
@@ -166,7 +166,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("""
-            Verify method updateUserRole with correct data.
+            Verify method updateUserRole with incorrect data.
              Role is not exist
             """)
     public void updateUserRole_IncorrectDataRoleNotExist_ReturnException() {
