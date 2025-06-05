@@ -6,7 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static star.carsharing.util.AuthTestUtil.roleCustomer;
-import static star.carsharing.util.AuthTestUtil.userDetails;
+import static star.carsharing.util.AuthTestUtil.user;
 import static star.carsharing.util.UserTestUtil.mapUpdateUserPassRequestDtoToUser;
 import static star.carsharing.util.UserTestUtil.mapUpdateUserRequestDtoToUser;
 import static star.carsharing.util.UserTestUtil.mapUserRegisterRequestDtoToUser;
@@ -63,7 +63,7 @@ public class UserServiceTest {
         User user = mapUserRegisterRequestDtoToUser(userRegisterDto);
         String codePass = passwordEncoder.encode(user.getPassword());
         Role role = roleCustomer();
-        UserDto expected = mapUserToUserDto(user);
+        UserDto expected = mapUserToUserDto(user,1L);
 
         when(userRepository.existsByEmail(userRegisterDto.email())).thenReturn(false);
         when(userMapper.toModel(userRegisterDto)).thenReturn(user);
@@ -115,8 +115,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method getAllUsers with correct data")
     public void getAllUsers_CorrectData_ReturnPageUserDto() {
-        User user = (User) userDetails();
-        UserDto expected = mapUserToUserDto(user);
+        User user = (User) user(1L);
+        UserDto expected = mapUserToUserDto(user, 1L);
         Pageable pageable = PageRequest.of(0, 10);
         List<User> users = List.of(user);
         PageImpl<User> userPage = new PageImpl<>(users, pageable, users.size());
@@ -133,10 +133,11 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method updateUserRole with correct data")
     public void updateUserRole_CorrectData_ReturnPageUserDto() {
-        User user = (User) userDetails();
-        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto();
+        User user = (User) user(1L);
+        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto(
+                Role.RoleName.CUSTOMER);
         Role role = roleCustomer();
-        UserDto expected = mapUserToUserDto(user);
+        UserDto expected = mapUserToUserDto(user, 1L);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
@@ -154,7 +155,8 @@ public class UserServiceTest {
             """)
     public void updateUserRole_IncorrectDataUserNotExist_ReturnException() {
         Long userId = 86L;
-        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto();
+        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto(
+                Role.RoleName.CUSTOMER);
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         Exception actual = assertThrows(EntityNotFoundException.class,
@@ -170,8 +172,9 @@ public class UserServiceTest {
              Role is not exist
             """)
     public void updateUserRole_IncorrectDataRoleNotExist_ReturnException() {
-        User user = (User) userDetails();
-        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto();
+        User user = (User) user(1L);
+        UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto(
+                Role.RoleName.CUSTOMER);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(roleRepository.findByName(Role.RoleName.CUSTOMER)).thenReturn(Optional.empty());
@@ -185,8 +188,8 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method findUserById with correct data")
     public void findUserById_CorrectData_ReturnUserDto() {
-        User user = (User) userDetails();
-        UserDto expected = mapUserToUserDto(user);
+        User user = (User) user(2L);
+        UserDto expected = mapUserToUserDto(user, 1L);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(userMapper.toDto(user)).thenReturn(expected);
@@ -200,7 +203,7 @@ public class UserServiceTest {
     public void updateUser_CorrectData_ReturnUserDto() {
         UpdateUserRequestDto updateUserDto = updateUserRequestDto();
         User user = mapUpdateUserRequestDtoToUser(updateUserDto);
-        UserDto expected = mapUserToUserDto(user);
+        UserDto expected = mapUserToUserDto(user, 1L);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);

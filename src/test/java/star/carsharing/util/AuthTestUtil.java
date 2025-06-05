@@ -3,23 +3,22 @@ package star.carsharing.util;
 import java.util.Set;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import star.carsharing.model.Role;
 import star.carsharing.model.User;
 
 public class AuthTestUtil {
-    public static Authentication authentication() {
-        UserDetails userDetails = userDetails();
+    public static Authentication authentication(Long userId) {
+        User user = user(userId);
         return new UsernamePasswordAuthenticationToken(
-                userDetails,
+                user,
                 null,
-                userDetails.getAuthorities()
+                user.getAuthorities()
         );
     }
 
-    public static UserDetails userDetails() {
+    public static User user(Long userId) {
         User user = new User();
-        user.setId(1L);
+        user.setId(userId);
         user.setEmail("user@email.com");
         user.setFirstName("user");
         user.setLastName("user");

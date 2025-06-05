@@ -39,9 +39,18 @@ public class UserTestUtil {
 
     public static UpdateUserRequestDto updateUserRequestDto() {
         return new UpdateUserRequestDto(
-                "test@email.com",
+                "user@email.com",
                 "UserName",
                 "UserSurname",
+                "0987654321"
+        );
+    }
+
+    public static UpdateUserRequestDto invalidUpdateUserRequestDto() {
+        return new UpdateUserRequestDto(
+                "useremail.com",
+                "",
+                "",
                 "0987654321"
         );
     }
@@ -53,10 +62,37 @@ public class UserTestUtil {
         );
     }
 
-    public static UpdateUserRoleRequestDto updateUserRoleRequestDto() {
-        return new UpdateUserRoleRequestDto(
-                Role.RoleName.CUSTOMER
+    public static UpdateUserPassRequestDto invalidUpdateUserPassRequestDto() {
+        return new UpdateUserPassRequestDto(
+                "1234",
+                "1234"
         );
+    }
+
+    public static UpdateUserRoleRequestDto updateUserRoleRequestDto(Role.RoleName role) {
+        return new UpdateUserRoleRequestDto(
+                role
+        );
+    }
+
+    public static UserDto updateRoleRequestDtoToUserDtoRoleManager() {
+        UserDto user = new UserDto();
+        user.setId(2L);
+        user.setEmail("user@email.com");
+        user.setFirstName("user");
+        user.setLastName("user");
+        user.setRolesId(List.of(1L));
+        return user;
+    }
+
+    public static UserDto mapUpdateUserRequestDtoToUserDto(UpdateUserRequestDto updateDto) {
+        UserDto userDto = new UserDto();
+        userDto.setId(2L);
+        userDto.setEmail(updateDto.email());
+        userDto.setFirstName(updateDto.firstName());
+        userDto.setLastName(updateDto.lastName());
+        userDto.setRolesId(List.of(2L));
+        return userDto;
     }
 
     public static User mapUpdateUserPassRequestDtoToUser(UpdateUserPassRequestDto dto) {
@@ -95,13 +131,37 @@ public class UserTestUtil {
         return user;
     }
 
-    public static UserDto mapUserToUserDto(User user) {
+    public static UserDto mapUserToUserDto(User user, Long roleId) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setEmail(user.getEmail());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-        userDto.setRolesId(List.of(1L));
+        userDto.setRolesId(List.of(roleId));
         return userDto;
+    }
+
+    public static List<UserDto> listThreeUsersDto() {
+        UserDto manager = new UserDto();
+        manager.setId(1L);
+        manager.setEmail("manager@email.com");
+        manager.setFirstName("manager");
+        manager.setLastName("manager");
+        manager.setRolesId(List.of(1L));
+
+        UserDto user = new UserDto();
+        user.setId(2L);
+        user.setEmail("user@email.com");
+        user.setFirstName("user");
+        user.setLastName("user");
+        user.setRolesId(List.of(2L));
+
+        UserDto user2 = new UserDto();
+        user2.setId(3L);
+        user2.setEmail("user2@email.com");
+        user2.setFirstName("user2");
+        user2.setLastName("user2");
+        user2.setRolesId(List.of(2L));
+        return List.of(manager, user, user2);
     }
 }
