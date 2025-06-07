@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static star.carsharing.util.AuthTestUtil.authentication;
+import static star.carsharing.util.AuthTestUtil.roleCustomer;
 import static star.carsharing.util.CarTestUtil.car;
 import static star.carsharing.util.RentalTestUnit.createRentalRequestDto;
 import static star.carsharing.util.RentalTestUnit.mapCreateRentalRequestDtoToRental;
@@ -57,7 +58,7 @@ public class RentalServiceTest {
     @Test
     @DisplayName("Verify method createRental with correct data")
     public void createRental_CorrectData_ReturnRentalResponseDto() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Long carId = 1L;
         Car car = car(carId, 1);
         CreateRentalRequestDto createRentalDto = createRentalRequestDto(carId);
@@ -81,7 +82,7 @@ public class RentalServiceTest {
              Costumer has had a rental
             """)
     public void createRental_IncorrectData_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         User user = (User) authentication.getPrincipal();
         CreateRentalRequestDto createRentalDto = createRentalRequestDto(1L);
 
@@ -100,7 +101,7 @@ public class RentalServiceTest {
              Invalid limit is true
             """)
     public void createRental_IncorrectDataInvalidLimitTrue_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         User user = (User) authentication.getPrincipal();
         Long carId = 1L;
         Car car = car(carId, 0);
@@ -122,7 +123,7 @@ public class RentalServiceTest {
              Car with the id not exist
             """)
     public void createRental_IncorrectDataCarByIdNotExist_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         User user = (User) authentication.getPrincipal();
         Long carId = 345L;
         CreateRentalRequestDto createRentalDto = createRentalRequestDto(carId);
@@ -140,7 +141,7 @@ public class RentalServiceTest {
     @Test
     @DisplayName("Verify method getRentalById with correct data")
     public void getRentalById_CorrectData_ReturnRentalResponseDto() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, true);
@@ -161,7 +162,7 @@ public class RentalServiceTest {
              List rentals is empty
             """)
     public void getRentalById_IncorrectData_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, true);
@@ -195,7 +196,7 @@ public class RentalServiceTest {
     @Test
     @DisplayName("Verify method closeRental with correct data")
     public void closeRental_CorrectData_ReturnRentalResponseWithActualReturnDateDto() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, true);
@@ -218,7 +219,7 @@ public class RentalServiceTest {
              Rental is closed
             """)
     public void closeRental_IncorrectDataRentalClosed_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(1L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, false);
@@ -238,7 +239,7 @@ public class RentalServiceTest {
              Rental is not exist
             """)
     public void closeRental_IncorrectDataRentalNotExist_ReturnException() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, true);
@@ -258,7 +259,7 @@ public class RentalServiceTest {
              Is active is true
             """)
     public void getUserRentalIsActive_CorrectDataIsActiveTrue_ReturnPageDto() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, true);
@@ -287,7 +288,7 @@ public class RentalServiceTest {
              Is active is false
             """)
     public void getUserRentalIsActive_CorrectDataIsActiveFalse_ReturnPageDto() {
-        Authentication authentication = authentication(1L);
+        Authentication authentication = authentication(2L, roleCustomer());
         Car car = car(1L, 1);
         User user = (User) authentication.getPrincipal();
         Rental rental = rental(user, car, false);

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static star.carsharing.util.AuthTestUtil.authentication;
+import static star.carsharing.util.AuthTestUtil.roleCustomer;
 import static star.carsharing.util.UserTestUtil.invalidUpdateUserPassRequestDto;
 import static star.carsharing.util.UserTestUtil.invalidUpdateUserRequestDto;
 import static star.carsharing.util.UserTestUtil.listThreeUsersDto;
@@ -71,8 +72,6 @@ public class UserControllerTest {
     public void getAllUsers_CorrectData_ReturnPageAllUserDto() throws Exception {
         MvcResult result = mockMvc.perform(
                         get("/users/all")
-                                .param("page", "0")
-                                .param("size", "10")
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -168,7 +167,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserById_CorrectData_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(2L);
+        Authentication authentication = authentication(2L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -198,7 +197,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserById_IncorrectData_ReturnStatus() throws Exception {
-        Authentication authentication = authentication(43L);
+        Authentication authentication = authentication(43L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -218,7 +217,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUser_CorrectData_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(2L);
+        Authentication authentication = authentication(2L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -250,7 +249,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUser_IncorrectDataInvalidDto_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(2L);
+        Authentication authentication = authentication(2L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -276,7 +275,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUser_IncorrectDataUserNotExist_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(432L);
+        Authentication authentication = authentication(432L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -299,7 +298,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUserPass_CorrectData_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(2L);
+        Authentication authentication = authentication(2L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -325,7 +324,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUserPass_IncorrectDataInvalidDto_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(2L);
+        Authentication authentication = authentication(2L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
@@ -351,7 +350,7 @@ public class UserControllerTest {
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateUserPass_IncorrectDataUserNotExist_ReturnUserDto() throws Exception {
-        Authentication authentication = authentication(245L);
+        Authentication authentication = authentication(245L, roleCustomer());
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);

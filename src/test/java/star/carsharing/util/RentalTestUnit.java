@@ -12,16 +12,33 @@ import star.carsharing.model.User;
 public class RentalTestUnit {
     public static CreateRentalRequestDto createRentalRequestDto(Long carId) {
         return new CreateRentalRequestDto(
-                LocalDate.of(2025, 5, 17),
+                LocalDate.now().plusDays(1),
                 carId
+        );
+    }
+
+    public static CreateRentalRequestDto invalidCreateRentalRequestDto(Long carId) {
+        return new CreateRentalRequestDto(
+                LocalDate.now(),
+                carId
+        );
+    }
+
+    public static RentalResponseDto rentalResponseDto(Long id, Boolean isActive) {
+        return new RentalResponseDto(
+                id,
+                LocalDate.now(),
+                LocalDate.now().plusDays(1),
+                1L,
+                isActive
         );
     }
 
     public static Rental rental(User user, Car car, boolean isActive) {
         Rental rental = new Rental();
         rental.setId(1L);
-        rental.setRentalDate(LocalDate.of(2025, 5, 15));
-        rental.setReturnDate(LocalDate.of(2025, 5, 17));
+        rental.setRentalDate(LocalDate.now());
+        rental.setReturnDate(LocalDate.now().plusDays(1));
         rental.setUser(user);
         rental.setCar(car);
         rental.setIsActive(isActive);
@@ -31,13 +48,23 @@ public class RentalTestUnit {
     public static Rental closedRental(User user, Car car) {
         Rental rental = new Rental();
         rental.setId(1L);
-        rental.setRentalDate(LocalDate.of(2025, 5, 15));
-        rental.setReturnDate(LocalDate.of(2025, 5, 16));
-        rental.setActualReturnDate(LocalDate.of(2025, 5, 17));
+        rental.setRentalDate(LocalDate.now());
+        rental.setReturnDate(LocalDate.now().plusDays(1));
+        rental.setActualReturnDate(LocalDate.now().plusDays(2));
         rental.setUser(user);
         rental.setCar(car);
         rental.setIsActive(false);
         return rental;
+    }
+
+    public static RentalResponseWithActualReturnDateDto rentalResponseWithActualReturnDateDto() {
+        return new RentalResponseWithActualReturnDateDto(
+                1L,
+                LocalDate.now(),
+                LocalDate.now().plusDays(1),
+                LocalDate.now(),
+                1L
+        );
     }
 
     public static UserRentalIsActiveRequestDto userRentalIsActiveRequestDto(
@@ -48,13 +75,24 @@ public class RentalTestUnit {
         );
     }
 
+    public static RentalResponseDto mapCreateRentalRequestDtoToRentalResponseDto(
+            CreateRentalRequestDto createDto) {
+        return new RentalResponseDto(
+                2L,
+                LocalDate.now(),
+                createDto.returnDate(),
+                1L,
+                true
+        );
+    }
+
     public static Rental mapCreateRentalRequestDtoToRental(
             CreateRentalRequestDto dto,
             User user,
             Car car) {
         Rental rental = new Rental();
         rental.setId(1L);
-        rental.setRentalDate(LocalDate.of(2025, 5, 15));
+        rental.setRentalDate(LocalDate.now());
         rental.setReturnDate(dto.returnDate());
         rental.setUser(user);
         rental.setCar(car);
@@ -77,7 +115,7 @@ public class RentalTestUnit {
         return new RentalResponseWithActualReturnDateDto(rental.getId(),
                 rental.getRentalDate(),
                 rental.getReturnDate(),
-                LocalDate.of(2025, 5, 16),
+                LocalDate.now().plusDays(1),
                 rental.getCar().getId()
         );
     }

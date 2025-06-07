@@ -57,7 +57,7 @@ public class RentalController {
     @Operation(summary = "View user`s rentals",
             description = "View the user`s rentals active or inactive")
     public Page<RentalResponseDto> getUserRentalIsActive(
-            UserRentalIsActiveRequestDto requestDto, Pageable pageable) {
+            @RequestBody @Valid UserRentalIsActiveRequestDto requestDto, Pageable pageable) {
         return rentalService.getUserRentalIsActive(requestDto, pageable);
     }
 

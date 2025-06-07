@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static star.carsharing.util.AuthTestUtil.roleCustomer;
 import static star.carsharing.util.AuthTestUtil.user;
 import static star.carsharing.util.CarTestUtil.car;
 import static star.carsharing.util.PaymentTestUtil.mapPaymentRequestDtoToPayment;
@@ -66,7 +67,7 @@ public class PaymentServiceTest {
     @DisplayName("Verify method createSession with correct data payment type PAYMENT")
     public void createSession_CorrectDataWithPayment_ReturnPaymentResponseDto() {
         PaymentRequestDto paymentDto = paymentRequestDto(Payment.Type.PAYMENT);
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         BigDecimal amount = BigDecimal.valueOf(246.18);
@@ -91,7 +92,7 @@ public class PaymentServiceTest {
     @DisplayName("Verify method createSession with correct data payment type FINE")
     public void createSession_CorrectDataWithFine_ReturnPaymentResponseDto() {
         PaymentRequestDto paymentDto = paymentRequestDto(Payment.Type.FINE);
-        User user = (User) user(1L);
+        User user = user(2L,roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         BigDecimal amount = BigDecimal.valueOf(430.815);
@@ -134,7 +135,7 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Verify method getPaymentById with correct data")
     public void getPaymentById_CorrectData_ReturnPaymentDto() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         Payment payment = payment(rental);
@@ -167,7 +168,7 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Verify method getPayments with correct data")
     public void getPayments_CorrectData_ReturnPageAllPaymentDto() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         Payment payment = payment(rental);
@@ -189,7 +190,7 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Verify method paymentCancel with correct data")
     public void paymentCancel_CorrectData_ReturnStatus() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         Payment payment = payment(rental);
@@ -218,7 +219,7 @@ public class PaymentServiceTest {
     @DisplayName("Verify method paymentSuccess with correct data")
     public void paymentSuccess_CorrectData_ReturnStatus() {
         String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         Payment payment = payment(rental);
@@ -241,7 +242,7 @@ public class PaymentServiceTest {
             """)
     public void paymentSuccess_IncorrectDataPaymentNotPaid_ReturnStatus() {
         String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         Payment payment = payment(rental);

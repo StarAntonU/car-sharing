@@ -115,7 +115,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method getAllUsers with correct data")
     public void getAllUsers_CorrectData_ReturnPageUserDto() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         UserDto expected = mapUserToUserDto(user, 1L);
         Pageable pageable = PageRequest.of(0, 10);
         List<User> users = List.of(user);
@@ -133,7 +133,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method updateUserRole with correct data")
     public void updateUserRole_CorrectData_ReturnPageUserDto() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto(
                 Role.RoleName.CUSTOMER);
         Role role = roleCustomer();
@@ -172,7 +172,7 @@ public class UserServiceTest {
              Role is not exist
             """)
     public void updateUserRole_IncorrectDataRoleNotExist_ReturnException() {
-        User user = (User) user(1L);
+        User user = user(2L, roleCustomer());
         UpdateUserRoleRequestDto updateUserRoleDto = updateUserRoleRequestDto(
                 Role.RoleName.CUSTOMER);
 
@@ -188,7 +188,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Verify method findUserById with correct data")
     public void findUserById_CorrectData_ReturnUserDto() {
-        User user = (User) user(2L);
+        User user = user(2L, roleCustomer());
         UserDto expected = mapUserToUserDto(user, 1L);
 
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
