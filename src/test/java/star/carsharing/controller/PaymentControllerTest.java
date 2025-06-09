@@ -214,7 +214,7 @@ public class PaymentControllerTest {
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getById_CorrectData_ReturnPaymentDto() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -237,7 +237,7 @@ public class PaymentControllerTest {
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getById_IncorrectDataPaymentNotExist_ReturnStatus() throws Exception {
         mockMvc.perform(
@@ -253,7 +253,7 @@ public class PaymentControllerTest {
             "classpath:db/user/add-users-to-users-table.sql",
             "classpath:db/usersroles/add-users-and-roles-to-users_roles.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql",
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql",
             "classpath:db/rental/delete-rentals-from-rentals-table.sql",
             "classpath:db/usersroles/delete-users-and-roles-from-users_roles.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
@@ -284,7 +284,7 @@ public class PaymentControllerTest {
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void paymentSuccess_CorrectData_ReturnStatus() throws Exception {
         when(stripePaymentService.isPaymentSessionPaid(any())).thenReturn(true);
@@ -304,7 +304,7 @@ public class PaymentControllerTest {
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void paymentSuccess_IncorrectData_ReturnStatus() throws Exception {
         when(stripePaymentService.isPaymentSessionPaid(any())).thenReturn(true);
@@ -319,10 +319,10 @@ public class PaymentControllerTest {
     @Test
     @DisplayName("Verify method paymentCancel with correct data")
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql",
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql",
             "classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void paymentCancel_CorrectData_ReturnStatus() throws Exception {
         mockMvc.perform(
@@ -338,10 +338,10 @@ public class PaymentControllerTest {
             Payment was cancelled.
             """)
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql",
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql",
             "classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void paymentCancel_IncorrectDataPaymentCancel_ReturnStatus() throws Exception {
         doNothing().when(notificationService).sentCancelPayment(any());
@@ -358,10 +358,10 @@ public class PaymentControllerTest {
             Payment is not exist
             """)
     @WithMockUser(username = "manager@email.com", roles = {"MANAGER"})
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql",
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql",
             "classpath:db/payment/add-payments-to-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/payment/delete-payments-to-payments-table.sql"},
+    @Sql(scripts = {"classpath:db/payment/delete-payments-from-payments-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void paymentCancel_IncorrectDataPaymentNotExist_ReturnStatus() throws Exception {
         mockMvc.perform(

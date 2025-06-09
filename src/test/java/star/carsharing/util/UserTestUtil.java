@@ -9,6 +9,8 @@ import star.carsharing.dto.user.UpdateUserPassRequestDto;
 import star.carsharing.dto.user.UpdateUserRequestDto;
 import star.carsharing.dto.user.UpdateUserRoleRequestDto;
 import star.carsharing.dto.user.UserDto;
+import star.carsharing.dto.user.UserLoginRequestDto;
+import star.carsharing.dto.user.UserLoginResponseDto;
 import star.carsharing.dto.user.UserRegisterRequestDto;
 import star.carsharing.model.Role;
 import star.carsharing.model.User;
@@ -26,6 +28,26 @@ public class UserTestUtil {
         return user;
     }
 
+    public static UserLoginRequestDto userLoginRequestDto() {
+        return new UserLoginRequestDto(
+                "manager@email.com",
+                "12345678"
+        );
+    }
+
+    public static UserLoginRequestDto invalidUserLoginRequestDto() {
+        return new UserLoginRequestDto(
+                "email.com",
+                "1234"
+        );
+    }
+
+    public static UserLoginResponseDto userLoginResponseDto() {
+        return new UserLoginResponseDto(
+                "123correctToken321"
+        );
+    }
+
     public static UserRegisterRequestDto userRegisterDto() {
         return new UserRegisterRequestDto(
                 "test@email.com",
@@ -37,12 +59,23 @@ public class UserTestUtil {
         );
     }
 
+    public static UserRegisterRequestDto invalidUserRegisterDto() {
+        return new UserRegisterRequestDto(
+                "test@email.com",
+                "1234",
+                "1234",
+                "",
+                "",
+                "0987654321"
+        );
+    }
+
     public static UpdateUserRequestDto updateUserRequestDto() {
         return new UpdateUserRequestDto(
                 "user@email.com",
                 "UserName",
                 "UserSurname",
-                "0987654321"
+                "09876543211"
         );
     }
 
@@ -83,6 +116,16 @@ public class UserTestUtil {
         user.setLastName("user");
         user.setRolesId(List.of(1L));
         return user;
+    }
+
+    public static UserDto mapUserRegisterRequestDtoToUserDto(UserRegisterRequestDto dto) {
+        UserDto userDto = new UserDto();
+        userDto.setId(2L);
+        userDto.setEmail(dto.email());
+        userDto.setFirstName(dto.firstName());
+        userDto.setLastName(dto.lastName());
+        userDto.setRolesId(List.of(2L));
+        return userDto;
     }
 
     public static UserDto mapUpdateUserRequestDtoToUserDto(UpdateUserRequestDto updateDto) {

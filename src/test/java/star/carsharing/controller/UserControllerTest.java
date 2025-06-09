@@ -63,7 +63,8 @@ public class UserControllerTest {
     @Test
     @DisplayName("Verify method getAllUsers with correct data")
     @WithMockUser(username = "manager", roles = {"MANAGER"})
-    @Sql(scripts = {"classpath:db/user/add-users-to-users-table.sql",
+    @Sql(scripts = {"classpath:db/user/delete-users-from-users-table.sql",
+            "classpath:db/user/add-users-to-users-table.sql",
             "classpath:db/usersroles/add-users-and-roles-to-users_roles.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/usersroles/delete-users-and-roles-from-users_roles.sql",
