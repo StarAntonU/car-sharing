@@ -51,12 +51,14 @@ public class PaymentController {
         return paymentService.getPayments(getUserId(authentication), pageable);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/success")
     @Operation(summary = "View success", description = "View if the payment was success")
     public void paymentSuccess(@RequestParam("session_id") String sessionId) {
         paymentService.paymentSuccess(sessionId);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/cancel")
     @Operation(summary = "View cancel", description = "View if the payment was cancel")
     public void paymentCancel(@RequestParam("session_id") String sessionId) {

@@ -61,7 +61,7 @@ public class CarControllerTest {
     @Test
     @DisplayName("Verify method addCar with correct data")
     @WithMockUser(username = "manager", roles = {"MANAGER"})
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void addCar_CorrectData_ReturnCarDto() throws Exception {
         CreateCarDto createCarDto = createCarDto();
@@ -104,7 +104,7 @@ public class CarControllerTest {
     @DisplayName("Verify method getAllCars with correct data")
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getAllCars_CorrectData_ReturnAllPageCarDto() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -126,7 +126,7 @@ public class CarControllerTest {
     @WithMockUser(username = "costumer", roles = {"COSTUMER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void findCarById_CorrectData_ReturnCarDto() throws Exception {
         MvcResult result = mockMvc.perform(
@@ -149,7 +149,7 @@ public class CarControllerTest {
     @WithMockUser(username = "costumer", roles = {"COSTUMER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void findCarById_IncorrectData_ReturnCarDto() throws Exception {
         mockMvc.perform(
@@ -163,7 +163,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarById_CorrectData_ReturnCarDto() throws Exception {
         CreateCarDto createCarDto = createCarDto();
@@ -191,7 +191,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarById_IncorrectDataInvalidDto_ReturnStatus() throws Exception {
         CreateCarDto createCarDto = invalidCreateCarDto();
@@ -213,7 +213,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarById_IncorrectDataInvalidId_ReturnStatus() throws Exception {
         CreateCarDto createCarDto = createCarDto();
@@ -231,7 +231,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarInventoryDto_CorrectData_ReturnCarDto() throws Exception {
         UpdateCarInventoryDto updateCarInventoryDto = updateCarInventoryDto(5);
@@ -258,7 +258,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarInventoryDto_IncorrectDataInvalidDto_ReturnStatus() throws Exception {
         UpdateCarInventoryDto updateCarInventoryDto = updateCarInventoryDto(0);
@@ -279,7 +279,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void updateCarInventoryDto_IncorrectDataInvalidId_ReturnStatus() throws Exception {
         UpdateCarInventoryDto updateCarInventoryDto = updateCarInventoryDto(1);
@@ -297,7 +297,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteCarById_CorrectData_ReturnCarDto() throws Exception {
         mockMvc.perform(
@@ -326,7 +326,7 @@ public class CarControllerTest {
     @WithMockUser(username = "manager", roles = {"MANAGER"})
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = {"classpath:db/car/delete-all-cars-from-cats-table.sql"},
+    @Sql(scripts = {"classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void deleteCarById_IncorrectData_ReturnStatus() throws Exception {
         mockMvc.perform(

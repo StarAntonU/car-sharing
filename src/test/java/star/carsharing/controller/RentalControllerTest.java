@@ -69,7 +69,7 @@ public class RentalControllerTest {
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql"},
+            "classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createRental_CorrectData_ReturnRentalResponseDto() throws Exception {
         Authentication authentication = authentication(2L, roleCustomer());
@@ -101,7 +101,7 @@ public class RentalControllerTest {
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql"},
+            "classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createRental_IncorrectDataInvalidDto_ReturnStatus() throws Exception {
         Authentication authentication = authentication(2L, roleCustomer());
@@ -127,7 +127,7 @@ public class RentalControllerTest {
     @Sql(scripts = {"classpath:db/car/add-cars-to-cars-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql"},
+            "classpath:db/car/delete-cars-from-cats-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void createRental_IncorrectDataCarNotExist_ReturnStatus() throws Exception {
         Authentication authentication = authentication(2L, roleCustomer());
@@ -152,7 +152,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getRentalById_CorrectData_ReturnRentalResponseDto() throws Exception {
@@ -183,7 +183,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getRentalById_IncorrectDataRentalNotExist_ReturnRentalStatus() throws Exception {
@@ -208,7 +208,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getRentalById_IncorrectDataUserNotExist_ReturnRentalStatus() throws Exception {
@@ -230,7 +230,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void closeRental_CorrectData_ReturnRentalResponseDto() throws Exception {
@@ -262,7 +262,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void closeRental_IncorrectDataRentalNotExist_ReturnStatus() throws Exception {
@@ -287,7 +287,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void closeRental_IncorrectDataUserNotExist_ReturnStatus() throws Exception {
@@ -309,7 +309,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserRentalIsActive_CorrectDataIsActualTrue_ReturnPageRentalResponseDto()
@@ -345,7 +345,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserRentalIsActive_CorrectDataIsActualFalse_ReturnPageRentalResponseDto()
@@ -370,7 +370,7 @@ public class RentalControllerTest {
                 });
 
         RentalResponseDto expected = rentalResponseDto(2L, false);
-        assertEquals(1, actual.size());
+        assertEquals(2, actual.size());
         assertEquals(expected, actual.get(0));
     }
 
@@ -384,7 +384,7 @@ public class RentalControllerTest {
             "classpath:db/user/add-users-to-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(scripts = {"classpath:db/rental/delete-rentals-from-rentals-table.sql",
-            "classpath:db/car/delete-all-cars-from-cats-table.sql",
+            "classpath:db/car/delete-cars-from-cats-table.sql",
             "classpath:db/user/delete-users-from-users-table.sql"},
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void getUserRentalIsActive_IncorrectDataInvalidDto_ReturnPageRentalResponseDto()

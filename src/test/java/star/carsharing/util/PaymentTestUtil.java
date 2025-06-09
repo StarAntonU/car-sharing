@@ -10,10 +10,10 @@ import star.carsharing.model.Payment;
 import star.carsharing.model.Rental;
 
 public class PaymentTestUtil {
-    public static Session mockSession() {
+    public static Session mockSession(String id, String url) {
         Session mockSession = new Session();
-        mockSession.setId("cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7");
-        mockSession.setUrl("https://checkout.stripe.com/c/pay/cs_test_a1OwDVFo");
+        mockSession.setId(id);
+        mockSession.setUrl(url);
         return mockSession;
     }
 
@@ -44,14 +44,26 @@ public class PaymentTestUtil {
                 .build();
     }
 
-    public static PaymentRequestDto paymentRequestDto(Payment.Type type) {
+    public static PaymentRequestDto paymentRequestDto(Long rentalId, Payment.Type type) {
         return new PaymentRequestDto(
-                1L,
+                rentalId,
                 type
         );
     }
 
-    public static Payment payment(Rental rental) {
+    public static Payment paymentStatusPaid(Rental rental) {
+        Payment payment = new Payment();
+        payment.setId(1L);
+        payment.setStatus(Payment.Status.PAID);
+        payment.setType(Payment.Type.PAYMENT);
+        payment.setRental(rental);
+        payment.setSessionUrl("https://checkout.stripe.com/c/pay/cs_test_a1OwDVFo");
+        payment.setSessionId("cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7");
+        payment.setAmount(BigDecimal.valueOf(246.18));
+        return payment;
+    }
+
+    public static Payment paymentStatusPayment(Rental rental) {
         Payment payment = new Payment();
         payment.setId(1L);
         payment.setStatus(Payment.Status.PENDING);
@@ -61,6 +73,16 @@ public class PaymentTestUtil {
         payment.setSessionId("cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7");
         payment.setAmount(BigDecimal.valueOf(246.18));
         return payment;
+    }
+
+    public static PaymentDto paymentDto() {
+        return new PaymentDto(
+                1L,
+                Payment.Status.PENDING,
+                Payment.Type.PAYMENT,
+                1L,
+                BigDecimal.valueOf(246.24)
+        );
     }
 
     public static PaymentDto mapPaymentToPaymentDto(Payment payment) {
@@ -90,6 +112,13 @@ public class PaymentTestUtil {
         return new PaymentResponseDto(
                 payment.getSessionId(),
                 payment.getSessionUrl()
+        );
+    }
+
+    public static PaymentResponseDto mapSessionToPaymentResponseDto(Session session) {
+        return new PaymentResponseDto(
+                session.getId(),
+                session.getUrl()
         );
     }
 }

@@ -13,8 +13,9 @@ import static star.carsharing.util.PaymentTestUtil.mapPaymentRequestDtoToPayment
 import static star.carsharing.util.PaymentTestUtil.mapPaymentToPaymentDto;
 import static star.carsharing.util.PaymentTestUtil.mapPaymentToPaymentResponseDto;
 import static star.carsharing.util.PaymentTestUtil.mockSession;
-import static star.carsharing.util.PaymentTestUtil.payment;
 import static star.carsharing.util.PaymentTestUtil.paymentRequestDto;
+import static star.carsharing.util.PaymentTestUtil.paymentStatusPaid;
+import static star.carsharing.util.PaymentTestUtil.paymentStatusPayment;
 import static star.carsharing.util.PaymentTestUtil.sessionCreateParams;
 import static star.carsharing.util.RentalTestUnit.closedRental;
 
@@ -33,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.server.ResponseStatusException;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
@@ -66,13 +68,13 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Verify method createSession with correct data payment type PAYMENT")
     public void createSession_CorrectDataWithPayment_ReturnPaymentResponseDto() {
-        PaymentRequestDto paymentDto = paymentRequestDto(Payment.Type.PAYMENT);
+        PaymentRequestDto paymentDto = paymentRequestDto(1L, Payment.Type.PAYMENT);
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         BigDecimal amount = BigDecimal.valueOf(246.18);
         SessionCreateParams sessionCreateParams = sessionCreateParams(amount);
-        Session session = mockSession();
+        Session session = mockSession("cs_test_aaaaa", "https://checkout.stripe.com");
         Payment payment = mapPaymentRequestDtoToPayment(paymentDto, rental, session, amount);
         PaymentResponseDto expected = mapPaymentToPaymentResponseDto(payment);
 
@@ -91,13 +93,13 @@ public class PaymentServiceTest {
     @Test
     @DisplayName("Verify method createSession with correct data payment type FINE")
     public void createSession_CorrectDataWithFine_ReturnPaymentResponseDto() {
-        PaymentRequestDto paymentDto = paymentRequestDto(Payment.Type.FINE);
-        User user = user(2L,roleCustomer());
+        PaymentRequestDto paymentDto = paymentRequestDto(1L, Payment.Type.FINE);
+        User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
         BigDecimal amount = BigDecimal.valueOf(430.815);
         SessionCreateParams sessionCreateParams = sessionCreateParams(amount);
-        Session session = mockSession();
+        Session session = mockSession("cs_test_aaaaa", "https://checkout.stripe.com");
         Payment payment = mapPaymentRequestDtoToPayment(paymentDto, rental, session, amount);
         PaymentResponseDto expected = mapPaymentToPaymentResponseDto(payment);
 
@@ -119,7 +121,7 @@ public class PaymentServiceTest {
              Rental by id and user id not exist
             """)
     public void createSession_IncorrectData_ReturnException() {
-        PaymentRequestDto paymentDto = paymentRequestDto(Payment.Type.PAYMENT);
+        PaymentRequestDto paymentDto = paymentRequestDto(1L, Payment.Type.PAYMENT);
         Long userId = 3L;
 
         when(rentalRepository.findByIdAndUserId(paymentDto.rentalId(), userId))
@@ -138,7 +140,7 @@ public class PaymentServiceTest {
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
-        Payment payment = payment(rental);
+        Payment payment = paymentStatusPayment(rental);
         PaymentDto expected = mapPaymentToPaymentDto(payment);
 
         when(paymentRepository.findById(rental.getId())).thenReturn(Optional.of(payment));
@@ -171,7 +173,7 @@ public class PaymentServiceTest {
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
-        Payment payment = payment(rental);
+        Payment payment = paymentStatusPayment(rental);
         PaymentDto expected = mapPaymentToPaymentDto(payment);
         Pageable pageable = PageRequest.of(0, 10);
         List<Payment> payments = List.of(payment);
@@ -188,12 +190,32 @@ public class PaymentServiceTest {
     }
 
     @Test
-    @DisplayName("Verify method paymentCancel with correct data")
+    @DisplayName("""
+            Verify method paymentCancel with incorrect data.
+            Payment status paid
+            """)
+    public void paymentCancel_IncorrectData_ReturnStatus() {
+        User user = user(2L, roleCustomer());
+        Car car = car(1L, 1);
+        Rental rental = closedRental(user, car);
+        Payment payment = paymentStatusPayment(rental);
+
+        when(paymentRepository.findBySessionId(payment.getSessionId()))
+                .thenReturn(Optional.of(payment));
+        Exception actual = assertThrows(ResponseStatusException.class,
+                () -> paymentService.paymentCancel(payment.getSessionId()));
+
+        String expected = "402 PAYMENT_REQUIRED \"Your payment was cancelled!\"";
+        assertEquals(expected, actual.getMessage());
+    }
+
+    @Test
+    @DisplayName("Verify method paymentCancel with incorrect data")
     public void paymentCancel_CorrectData_ReturnStatus() {
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
-        Payment payment = payment(rental);
+        Payment payment = paymentStatusPaid(rental);
 
         when(paymentRepository.findBySessionId(payment.getSessionId()))
                 .thenReturn(Optional.of(payment));
@@ -222,7 +244,7 @@ public class PaymentServiceTest {
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
-        Payment payment = payment(rental);
+        Payment payment = paymentStatusPayment(rental);
 
         when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.of(payment));
         when(stripePaymentService.isPaymentSessionPaid(sessionId)).thenReturn(true);
@@ -245,7 +267,7 @@ public class PaymentServiceTest {
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);
         Rental rental = closedRental(user, car);
-        Payment payment = payment(rental);
+        Payment payment = paymentStatusPayment(rental);
 
         when(paymentRepository.findBySessionId(sessionId)).thenReturn(Optional.of(payment));
         when(stripePaymentService.isPaymentSessionPaid(sessionId)).thenReturn(false);

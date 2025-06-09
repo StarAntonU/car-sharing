@@ -7,8 +7,10 @@ import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
@@ -90,6 +92,8 @@ public class PaymentServiceImpl implements PaymentService {
         );
         if (payment.getStatus().equals(Payment.Status.PENDING)) {
             notificationService.sentCancelPayment(payment);
+            throw new ResponseStatusException(
+                    HttpStatus.PAYMENT_REQUIRED, "Your payment was cancelled!");
         }
     }
 
