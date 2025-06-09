@@ -39,7 +39,7 @@ public class CarController {
     }
 
     @GetMapping
-    @Operation(summary = "View cars", description = "View list of all cars")
+    @Operation(summary = "View the cars", description = "View list of all cars")
     public Page<CarDto> getAllCars(Pageable pageable) {
         return carService.getAllCars(pageable);
     }

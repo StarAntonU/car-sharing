@@ -6,11 +6,13 @@ import static org.mockito.Mockito.when;
 import static star.carsharing.util.AuthTestUtil.authentication;
 import static star.carsharing.util.AuthTestUtil.roleCustomer;
 import static star.carsharing.util.CarTestUtil.car;
+import static star.carsharing.util.RentalTestUnit.actualReturnTime;
 import static star.carsharing.util.RentalTestUnit.createRentalRequestDto;
 import static star.carsharing.util.RentalTestUnit.mapCreateRentalRequestDtoToRental;
 import static star.carsharing.util.RentalTestUnit.mapRentalToRentalResponseDto;
 import static star.carsharing.util.RentalTestUnit.mapRentalToRentalWithActualReturnDateDto;
 import static star.carsharing.util.RentalTestUnit.rental;
+import static star.carsharing.util.RentalTestUnit.rentalTime;
 import static star.carsharing.util.RentalTestUnit.userRentalIsActiveRequestDto;
 
 import java.util.List;
@@ -41,6 +43,7 @@ import star.carsharing.repository.CarRepository;
 import star.carsharing.repository.RentalRepository;
 import star.carsharing.service.impl.RentalServiceImpl;
 import star.carsharing.telegram.NotificationService;
+import star.carsharing.util.TimeProvider;
 
 @ExtendWith(MockitoExtension.class)
 public class RentalServiceTest {
@@ -54,6 +57,8 @@ public class RentalServiceTest {
     private RentalMapper rentalMapper;
     @Mock
     private NotificationService notificationService;
+    @Mock
+    private TimeProvider timeProvider;
 
     @Test
     @DisplayName("Verify method createRental with correct data")
@@ -69,6 +74,7 @@ public class RentalServiceTest {
         when(rentalRepository.existsByUserIdAndIsActiveIsTrue(user.getId())).thenReturn(false);
         when(carRepository.findById(carId)).thenReturn(Optional.of(car));
         when(rentalMapper.toModel(createRentalDto)).thenReturn(rental);
+        when(timeProvider.now()).thenReturn(rentalTime);
         when(rentalRepository.save(rental)).thenReturn(rental);
         when(rentalMapper.toResponseDto(rental)).thenReturn(expected);
         RentalResponseDto actual = rentalService.createRental(authentication, createRentalDto);
@@ -205,6 +211,7 @@ public class RentalServiceTest {
 
         when(rentalRepository.findAllByUserId(user.getId())).thenReturn(List.of(rental));
         when(rentalRepository.findById(rental.getId())).thenReturn(Optional.of(rental));
+        when(timeProvider.now()).thenReturn(actualReturnTime);
         when(carRepository.save(car)).thenReturn(car);
         when(rentalMapper.toDtoWithActualReturnDate(rental)).thenReturn(expected);
         RentalResponseWithActualReturnDateDto actual =

@@ -61,7 +61,7 @@ public class UserController {
 
     @PatchMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Update user`s pass", description = "Update user`s password")
+    @Operation(summary = "Update pass", description = "Update user`s password")
     public void updateUserPass(
             Authentication authentication,
             @RequestBody @Valid UpdateUserPassRequestDto requestDto) {

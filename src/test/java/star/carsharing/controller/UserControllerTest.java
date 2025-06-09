@@ -25,6 +25,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -45,15 +46,16 @@ import star.carsharing.model.Role;
 import star.carsharing.model.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private WebApplicationContext applicationContext;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())

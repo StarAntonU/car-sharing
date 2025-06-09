@@ -1,6 +1,5 @@
 package star.carsharing.service.impl;
 
-import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import star.carsharing.repository.CarRepository;
 import star.carsharing.repository.RentalRepository;
 import star.carsharing.service.RentalService;
 import star.carsharing.telegram.NotificationService;
+import star.carsharing.util.TimeProvider;
 
 @Service
 @Transactional
@@ -36,6 +36,7 @@ public class RentalServiceImpl implements RentalService {
     private final RentalRepository rentalRepository;
     private final RentalMapper rentalMapper;
     private final NotificationService notificationService;
+    private final TimeProvider timeProvider;
 
     @Override
     public RentalResponseDto createRental(
@@ -50,7 +51,7 @@ public class RentalServiceImpl implements RentalService {
                     "Insufficient quantity of cars");
         }
         Rental rental = rentalMapper.toModel(requestDto);
-        rental.setRentalDate(LocalDate.now());
+        rental.setRentalDate(timeProvider.now());
         rental.setReturnDate(requestDto.returnDate());
         rental.setIsActive(ACTIVE);
         rental.setUser(user);
@@ -81,7 +82,7 @@ public class RentalServiceImpl implements RentalService {
             throw new ForbiddenOperationException("Access is denied");
         }
         rental.setIsActive(INACTIVE);
-        rental.setActualReturnDate(LocalDate.now());
+        rental.setActualReturnDate(timeProvider.now());
         notificationService.sentNotificationClosedRental(rental);
         Car car = rental.getCar();
         car.setInventory(car.getInventory() + 1);

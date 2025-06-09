@@ -28,6 +28,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -43,15 +44,16 @@ import star.carsharing.dto.car.UpdateCarInventoryDto;
 import star.carsharing.model.Car;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CarControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
+    @Autowired
+    private WebApplicationContext applicationContext;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())

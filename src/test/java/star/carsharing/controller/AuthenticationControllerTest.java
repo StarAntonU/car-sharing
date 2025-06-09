@@ -18,16 +18,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import star.carsharing.config.TestAuthenticationServiceConfig;
 import star.carsharing.dto.user.UserDto;
 import star.carsharing.dto.user.UserLoginRequestDto;
 import star.carsharing.dto.user.UserLoginResponseDto;
@@ -35,18 +36,19 @@ import star.carsharing.dto.user.UserRegisterRequestDto;
 import star.carsharing.security.AuthenticationService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({TestAuthenticationServiceConfig.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureMockMvc
 public class AuthenticationControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
+    private WebApplicationContext applicationContext;
+    @MockBean
     private AuthenticationService authenticationService;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())

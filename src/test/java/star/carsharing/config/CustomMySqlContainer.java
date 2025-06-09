@@ -8,7 +8,6 @@ public class CustomMySqlContainer extends MySQLContainer<CustomMySqlContainer> {
 
     private CustomMySqlContainer() {
         super(DB_IMAGE);
-        this.withCommand("--default-time-zone=Europe/Kiev");
     }
 
     public static synchronized CustomMySqlContainer getInstance() {

@@ -26,9 +26,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -39,8 +41,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import star.carsharing.config.TestNotificationConfig;
-import star.carsharing.config.TestStripePaymentServiceConfig;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
@@ -49,20 +49,21 @@ import star.carsharing.service.StripePaymentService;
 import star.carsharing.telegram.NotificationService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import({TestNotificationConfig.class, TestStripePaymentServiceConfig.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureMockMvc
 public class PaymentControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
+    private WebApplicationContext applicationContext;
+    @MockBean
     private StripePaymentService stripePaymentService;
-    @Autowired
+    @MockBean
     private NotificationService notificationService;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())

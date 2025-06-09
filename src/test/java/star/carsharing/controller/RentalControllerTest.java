@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,11 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static star.carsharing.util.AuthTestUtil.authentication;
 import static star.carsharing.util.AuthTestUtil.roleCustomer;
 import static star.carsharing.util.AuthTestUtil.roleManager;
+import static star.carsharing.util.RentalTestUnit.actualReturnTime;
 import static star.carsharing.util.RentalTestUnit.createRentalRequestDto;
 import static star.carsharing.util.RentalTestUnit.invalidCreateRentalRequestDto;
 import static star.carsharing.util.RentalTestUnit.mapCreateRentalRequestDtoToRentalResponseDto;
 import static star.carsharing.util.RentalTestUnit.rentalResponseDto;
 import static star.carsharing.util.RentalTestUnit.rentalResponseWithActualReturnDateDto;
+import static star.carsharing.util.RentalTestUnit.rentalTime;
 import static star.carsharing.util.RentalTestUnit.userRentalIsActiveRequestDto;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,9 +29,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -38,26 +43,29 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import star.carsharing.config.TestNotificationConfig;
 import star.carsharing.dto.rental.CreateRentalRequestDto;
 import star.carsharing.dto.rental.RentalResponseDto;
 import star.carsharing.dto.rental.RentalResponseWithActualReturnDateDto;
 import star.carsharing.dto.rental.UserRentalIsActiveRequestDto;
 import star.carsharing.telegram.NotificationService;
+import star.carsharing.util.TimeProvider;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(TestNotificationConfig.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@AutoConfigureMockMvc
 public class RentalControllerTest {
-    protected static MockMvc mockMvc;
+    protected MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
+    private WebApplicationContext applicationContext;
+    @MockBean
     private NotificationService notificationService;
+    @MockBean
+    private TimeProvider timeProvider;
 
     @BeforeAll
-    static void beforeAll(
-            @Autowired WebApplicationContext applicationContext
-    ) {
+    void beforeAll() {
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(applicationContext)
                 .apply(springSecurity())
@@ -79,6 +87,7 @@ public class RentalControllerTest {
         CreateRentalRequestDto createRentalDto = createRentalRequestDto(1L);
         String jsonRequest = objectMapper.writeValueAsString(createRentalDto);
 
+        when(timeProvider.now()).thenReturn(rentalTime);
         doNothing().when(notificationService).sentNotificationCreateRental(any());
         MvcResult result = mockMvc.perform(
                         post("/rentals")
@@ -239,6 +248,7 @@ public class RentalControllerTest {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
 
+        when(timeProvider.now()).thenReturn(actualReturnTime);
         MvcResult result = mockMvc.perform(
                         post("/rentals/1/return")
                                 .contentType(MediaType.APPLICATION_JSON))
