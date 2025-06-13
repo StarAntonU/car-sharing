@@ -62,7 +62,7 @@ public class RentalServiceImpl implements RentalService {
         try {
             notificationService.sentNotificationCreateRental(rental);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t sent the notification");
+            throw new TelegramApiException("Can`t send the notification");
         }
         return rentalMapper.toResponseDto(rentalRepository.save(rental));
     }
@@ -92,7 +92,7 @@ public class RentalServiceImpl implements RentalService {
         try {
             notificationService.sentNotificationClosedRental(rental);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t sent the notification");
+            throw new TelegramApiException("Can`t send the notification");
         }
         Car car = rental.getCar();
         car.setInventory(car.getInventory() + 1);
@@ -121,4 +121,3 @@ public class RentalServiceImpl implements RentalService {
         );
     }
 }
-

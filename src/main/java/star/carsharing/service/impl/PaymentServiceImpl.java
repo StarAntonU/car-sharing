@@ -86,7 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             notificationService.sentSuccessesPayment(payment);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t sent the notification");
+            throw new TelegramApiException("Can`t send the notification");
         }
         paymentRepository.save(payment);
     }
@@ -100,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService {
             try {
                 notificationService.sentCancelPayment(payment);
             } catch (NotificationException e) {
-                throw new TelegramApiException("Can`t sent the notification");
+                throw new TelegramApiException("Can`t send the notification");
             }
             throw new ResponseStatusException(
                     HttpStatus.PAYMENT_REQUIRED, "Your payment was cancelled!");

@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     @Override
 
     public UserDto updateUserRole(Long id, UpdateUserRoleRequestDto requestDto) {
-        User user = getUserFromDB(id);
+        User user = getUserFromDbById(id);
         Role role = roleRepository.findByName(requestDto.role()).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find role by name " + requestDto.role())
         );
@@ -62,20 +62,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findUserById(Long id) {
-        return userMapper.toDto(getUserFromDB(id));
+        return userMapper.toDto(getUserFromDbById(id));
     }
 
     @Override
     public UserDto updateUser(Long id, UpdateUserRequestDto requestDto) {
-        User user = getUserFromDB(id);
+        User user = getUserFromDbById(id);
         userMapper.updateUser(user, requestDto);
         return userMapper.toDto(userRepository.save(user));
     }
 
     @Override
     public void updateUserPass(Long id, UpdateUserPassRequestDto requestDto) {
-        User user = getUserFromDB(id);
+        User user = getUserFromDbById(id);
         user.setPassword(passwordEncoder.encode(requestDto.password()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public void setUserTelegramChatId(String username, String chatId) {
+        User user = getUserFromDbByEmail(username);
+        user.setTelegramChatId(chatId);
         userRepository.save(user);
     }
 
@@ -93,9 +100,15 @@ public class UserServiceImpl implements UserService {
         return roles;
     }
 
-    private User getUserFromDB(Long id) {
+    private User getUserFromDbById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can`t find user by id " + id)
+        );
+    }
+
+    private User getUserFromDbByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("Can`t find user by id " + email)
         );
     }
 }

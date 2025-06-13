@@ -8,14 +8,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import star.carsharing.exception.unchecked.TelegramApiException;
-import star.carsharing.repository.UserRepository;
+import star.carsharing.service.UserService;
 
 @Service
 @RequiredArgsConstructor
 public class GreetingTelegramBotService {
     private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
     private final RestTemplate restTemplate;
-    private final UserRepository userRepository;
+    private final UserService userService;
     @Value("${telegram.bot.token}")
     private String botToken;
     private int lastUpdateId = 0;
@@ -35,9 +35,13 @@ public class GreetingTelegramBotService {
                     if (message != null) {
                         String text = (String) message.get("text");
                         if ("/start".equalsIgnoreCase(text)) {
+                            String username = String.valueOf(
+                                    ((Map<String, Object>) message.get("chat"))
+                                            .get("username").toString());
                             String chatId = String.valueOf(
                                     ((Map<String, Object>) message.get("chat"))
                                             .get("id").toString());
+                            userService.setUserTelegramChatId(username, chatId);
                             sendGreetingMessage(chatId);
                         }
                     }

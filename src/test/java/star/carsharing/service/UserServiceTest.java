@@ -2,6 +2,7 @@ package star.carsharing.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import static star.carsharing.util.UserTestUtil.mapUserToUserDto;
 import static star.carsharing.util.UserTestUtil.updateUserPassRequestDto;
 import static star.carsharing.util.UserTestUtil.updateUserRequestDto;
 import static star.carsharing.util.UserTestUtil.updateUserRoleRequestDto;
+import static star.carsharing.util.UserTestUtil.userManager;
 import static star.carsharing.util.UserTestUtil.userRegisterDto;
 
 import java.util.List;
@@ -228,5 +230,30 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(user.getId());
         verify(userRepository, times(1)).save(user);
     }
-}
 
+    @Test
+    @DisplayName("Verify method setUserTelegramChatId with correct data")
+    public void setUserTelegramChatId_CorrectData_ReturnStatus() {
+        User expected = userManager();
+
+        when(userRepository.findByEmail(expected.getEmail())).thenReturn(Optional.of(expected));
+        when(userRepository.save(expected)).thenReturn(expected);
+        userService.setUserTelegramChatId(expected.getEmail(), expected.getTelegramChatId());
+
+        verify(userRepository, times(1)).findByEmail(expected.getEmail());
+        verify(userRepository, times(1)).save(expected);
+    }
+
+    @Test
+    @DisplayName("Verify method setUserTelegramChatId with incorrect data. User is not exist")
+    public void setUserTelegramChatId_IncorrectData_ReturnStatus() {
+        String email = "usernotexist@email.com";
+
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        Exception actual = assertThrows(EntityNotFoundException.class,
+                () -> userService.setUserTelegramChatId(email, any()));
+
+        String expected = "Can`t find user by id " + email;
+        assertEquals(expected, actual.getMessage());
+    }
+}

@@ -21,4 +21,6 @@ public interface UserService {
     UserDto updateUser(Long id, UpdateUserRequestDto requestDto);
 
     void updateUserPass(Long id, UpdateUserPassRequestDto requestDto);
+
+    void setUserTelegramChatId(String username, String chatId);
 }
