@@ -99,7 +99,7 @@ public class RentalControllerTest {
                 result.getResponse().getContentAsString(), RentalResponseDto.class);
 
         RentalResponseDto expected = mapCreateRentalRequestDtoToRentalResponseDto(createRentalDto);
-        //assertEquals(expected, actual);
+        assertTrue(reflectionEquals(expected, actual, "id"));
     }
 
     @Test

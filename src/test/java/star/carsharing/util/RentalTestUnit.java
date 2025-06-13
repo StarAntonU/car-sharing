@@ -10,9 +10,9 @@ import star.carsharing.model.Rental;
 import star.carsharing.model.User;
 
 public class RentalTestUnit {
-    public static final LocalDate rentalTime = LocalDate.of(2025, 6, 10);
-    public static final LocalDate returnTime = LocalDate.of(2025, 6, 11);
-    public static final LocalDate actualReturnTime = LocalDate.of(2025, 6, 12);
+    public static final LocalDate rentalTime = LocalDate.of(2099, 6, 10);
+    public static final LocalDate returnTime = LocalDate.of(2099, 6, 11);
+    public static final LocalDate actualReturnTime = LocalDate.of(2099, 6, 12);
 
     public static CreateRentalRequestDto createRentalRequestDto(Long carId) {
         return new CreateRentalRequestDto(
@@ -23,7 +23,7 @@ public class RentalTestUnit {
 
     public static CreateRentalRequestDto invalidCreateRentalRequestDto(Long carId) {
         return new CreateRentalRequestDto(
-                rentalTime,
+                rentalTime.minusYears(100),
                 carId
         );
     }

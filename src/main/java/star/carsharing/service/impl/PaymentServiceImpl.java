@@ -14,8 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
+import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
+import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.mapper.PaymentMapper;
 import star.carsharing.model.Payment;
 import star.carsharing.model.Rental;
@@ -26,7 +28,7 @@ import star.carsharing.service.StripePaymentService;
 import star.carsharing.telegram.NotificationService;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = {NotificationException.class})
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private static final BigDecimal FINE_MULTIPLIER = new BigDecimal("1.5");
@@ -81,7 +83,11 @@ public class PaymentServiceImpl implements PaymentService {
             throw new PaymentException("Payment isn`t successful for sessionId: " + sessionId);
         }
         payment.setStatus(Payment.Status.PAID);
-        notificationService.sentSuccessesPayment(payment);
+        try {
+            notificationService.sentSuccessesPayment(payment);
+        } catch (NotificationException e) {
+            throw new TelegramApiException("Can`t sent the notification");
+        }
         paymentRepository.save(payment);
     }
 
@@ -91,7 +97,11 @@ public class PaymentServiceImpl implements PaymentService {
                 () -> new EntityNotFoundException("Can`t find session by id " + sessionId)
         );
         if (payment.getStatus().equals(Payment.Status.PENDING)) {
-            notificationService.sentCancelPayment(payment);
+            try {
+                notificationService.sentCancelPayment(payment);
+            } catch (NotificationException e) {
+                throw new TelegramApiException("Can`t sent the notification");
+            }
             throw new ResponseStatusException(
                     HttpStatus.PAYMENT_REQUIRED, "Your payment was cancelled!");
         }

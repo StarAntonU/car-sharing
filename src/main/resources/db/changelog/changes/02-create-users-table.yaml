@@ -38,5 +38,4 @@ databaseChangeLog:
                   name: telegram_chat_id
                   type: varchar(512)
                   constraints:
-                    nullable: false
                     unique: true

@@ -38,6 +38,7 @@ import org.springframework.web.server.ResponseStatusException;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
+import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
 import star.carsharing.mapper.PaymentMapper;
@@ -239,7 +240,7 @@ public class PaymentServiceTest {
 
     @Test
     @DisplayName("Verify method paymentSuccess with correct data")
-    public void paymentSuccess_CorrectData_ReturnStatus() {
+    public void paymentSuccess_CorrectData_ReturnStatus() throws NotificationException {
         String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);

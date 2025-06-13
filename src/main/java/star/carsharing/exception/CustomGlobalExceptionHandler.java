@@ -15,15 +15,33 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.checked.RegistrationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.ForbiddenOperationException;
 import star.carsharing.exception.unchecked.InsufficientQuantityException;
 import star.carsharing.exception.unchecked.PaymentException;
 import star.carsharing.exception.unchecked.SessionFallException;
+import star.carsharing.exception.unchecked.TelegramApiException;
 
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler({NotificationException.class})
+    public ResponseEntity<Object> handlerInsufficientQuantityException(
+            NotificationException exception) {
+        return ResponseEntity
+                .status(HttpStatus.PAYMENT_REQUIRED)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler({TelegramApiException.class})
+    public ResponseEntity<Object> handlerInsufficientQuantityException(
+            TelegramApiException exception) {
+        return ResponseEntity
+                .status(HttpStatus.PAYMENT_REQUIRED)
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler({PaymentException.class})
     public ResponseEntity<Object> handlerInsufficientQuantityException(
             PaymentException exception) {

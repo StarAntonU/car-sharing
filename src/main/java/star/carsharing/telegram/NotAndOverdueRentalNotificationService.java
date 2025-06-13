@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import star.carsharing.exception.checked.NotificationException;
+import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.model.Rental;
 import star.carsharing.model.Role;
 import star.carsharing.model.User;
@@ -22,7 +24,11 @@ public class NotAndOverdueRentalNotificationService {
     public void notificationNotOverdueRents() {
         List<Rental> rentals = rentalRepository.findAllByReturnDateLessThan(LocalDate.now());
         for (Rental rental : rentals) {
-            notificationService.sentNotificationNotOverdueRental(rental);
+            try {
+                notificationService.sentNotificationNotOverdueRental(rental);
+            } catch (NotificationException e) {
+                throw new TelegramApiException("Can`t sent the notification");
+            }
         }
     }
 
@@ -33,15 +39,27 @@ public class NotAndOverdueRentalNotificationService {
         List<User> users = userRepository.findAllByRoles(Role.RoleName.MANAGER);
         if (rentals.isEmpty()) {
             for (User user : users) {
-                notificationService.sentNotificationToManagerNotOverdue(user);
+                try {
+                    notificationService.sentNotificationToManagerNotOverdue(user);
+                } catch (NotificationException e) {
+                    throw new TelegramApiException("Can`t sent the notification");
+                }
             }
             return;
         }
         for (Rental rental : rentals) {
             for (User user : users) {
-                notificationService.sentNotificationToManagerOverdue(user, rental);
+                try {
+                    notificationService.sentNotificationToManagerOverdue(user, rental);
+                } catch (NotificationException e) {
+                    throw new TelegramApiException("Can`t sent the notification");
+                }
             }
-            notificationService.sentNotificationOverdueRental(rental);
+            try {
+                notificationService.sentNotificationOverdueRental(rental);
+            } catch (NotificationException e) {
+                throw new TelegramApiException("Can`t sent the notification");
+            }
         }
     }
 }

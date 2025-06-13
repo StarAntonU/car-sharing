@@ -54,8 +54,7 @@ public class UserTestUtil {
                 "12345678",
                 "12345678",
                 "UserName",
-                "UserSurname",
-                "0987654321"
+                "UserSurname"
         );
     }
 
@@ -65,8 +64,7 @@ public class UserTestUtil {
                 "1234",
                 "1234",
                 "",
-                "",
-                "0987654321"
+                ""
         );
     }
 
@@ -169,7 +167,6 @@ public class UserTestUtil {
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
         user.setPassword(dto.password());
-        user.setTelegramChatId(dto.telegramChatId());
         user.setRoles(Set.of(roleCustomer()));
         return user;
     }

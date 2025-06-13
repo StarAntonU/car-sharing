@@ -21,9 +21,6 @@ public record UserRegisterRequestDto(
         String firstName,
         @NotBlank
         @Size(min = 2, max = 64)
-        String lastName,
-        @NotBlank
-        @Size(max = 512)
-        String telegramChatId
+        String lastName
 ) {
 }

@@ -11,9 +11,11 @@ import star.carsharing.dto.rental.CreateRentalRequestDto;
 import star.carsharing.dto.rental.RentalResponseDto;
 import star.carsharing.dto.rental.RentalResponseWithActualReturnDateDto;
 import star.carsharing.dto.rental.UserRentalIsActiveRequestDto;
+import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.ForbiddenOperationException;
 import star.carsharing.exception.unchecked.InsufficientQuantityException;
+import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.mapper.RentalMapper;
 import star.carsharing.model.Car;
 import star.carsharing.model.Rental;
@@ -25,7 +27,7 @@ import star.carsharing.telegram.NotificationService;
 import star.carsharing.util.TimeProvider;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = {NotificationException.class})
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
     private static final boolean ACTIVE = true;
@@ -57,7 +59,11 @@ public class RentalServiceImpl implements RentalService {
         rental.setUser(user);
         car.setInventory(car.getInventory() - 1);
         rental.setCar(car);
-        notificationService.sentNotificationCreateRental(rental);
+        try {
+            notificationService.sentNotificationCreateRental(rental);
+        } catch (NotificationException e) {
+            throw new TelegramApiException("Can`t sent the notification");
+        }
         return rentalMapper.toResponseDto(rentalRepository.save(rental));
     }
 
@@ -83,7 +89,11 @@ public class RentalServiceImpl implements RentalService {
         }
         rental.setIsActive(INACTIVE);
         rental.setActualReturnDate(timeProvider.now());
-        notificationService.sentNotificationClosedRental(rental);
+        try {
+            notificationService.sentNotificationClosedRental(rental);
+        } catch (NotificationException e) {
+            throw new TelegramApiException("Can`t sent the notification");
+        }
         Car car = rental.getCar();
         car.setInventory(car.getInventory() + 1);
         carRepository.save(car);
