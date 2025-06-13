@@ -35,7 +35,8 @@ public class RentalController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a rental", description = "Create a new rental")
     public RentalResponseDto createRental(
-            Authentication authentication, @RequestBody @Valid CreateRentalRequestDto requestDto) throws NotificationException {
+            Authentication authentication, @RequestBody @Valid CreateRentalRequestDto requestDto)
+            throws NotificationException {
         return rentalService.createRental(authentication, requestDto);
     }
 

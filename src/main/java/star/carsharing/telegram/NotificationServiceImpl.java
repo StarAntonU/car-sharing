@@ -109,7 +109,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sentNotificationToManagerOverdue(User user, Rental rental) throws NotificationException {
+    public void sentNotificationToManagerOverdue(User user, Rental rental)
+            throws NotificationException {
         long days = ChronoUnit.DAYS.between(rental.getRentalDate(), LocalDate.now());
         String message = String.format("""
                 Rental is overdue %s days
