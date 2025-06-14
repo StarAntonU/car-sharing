@@ -2,6 +2,7 @@ package star.carsharing.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,6 @@ import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.ForbiddenOperationException;
 import star.carsharing.exception.unchecked.InsufficientQuantityException;
-import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.mapper.RentalMapper;
 import star.carsharing.model.Car;
 import star.carsharing.model.Rental;
@@ -26,8 +26,9 @@ import star.carsharing.service.RentalService;
 import star.carsharing.telegram.NotificationService;
 import star.carsharing.util.TimeProvider;
 
+@Slf4j
 @Service
-@Transactional(rollbackFor = {NotificationException.class})
+@Transactional
 @RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
     private static final boolean ACTIVE = true;
@@ -62,7 +63,7 @@ public class RentalServiceImpl implements RentalService {
         try {
             notificationService.sentNotificationCreateRental(rental);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t send the notification");
+            log.info("Can`t send the notification to user by id {}", user.getId());
         }
         return rentalMapper.toResponseDto(rentalRepository.save(rental));
     }
@@ -92,7 +93,7 @@ public class RentalServiceImpl implements RentalService {
         try {
             notificationService.sentNotificationClosedRental(rental);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t send the notification");
+            log.info("Can`t send the notification to user by id {}", userId);
         }
         Car car = rental.getCar();
         car.setInventory(car.getInventory() + 1);

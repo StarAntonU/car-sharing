@@ -5,6 +5,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,6 @@ import star.carsharing.dto.payment.PaymentResponseDto;
 import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
-import star.carsharing.exception.unchecked.TelegramApiException;
 import star.carsharing.mapper.PaymentMapper;
 import star.carsharing.model.Payment;
 import star.carsharing.model.Rental;
@@ -27,8 +27,9 @@ import star.carsharing.service.PaymentService;
 import star.carsharing.service.StripePaymentService;
 import star.carsharing.telegram.NotificationService;
 
+@Slf4j
 @Service
-@Transactional(rollbackFor = {NotificationException.class})
+@Transactional
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private static final BigDecimal FINE_MULTIPLIER = new BigDecimal("1.5");
@@ -86,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             notificationService.sentSuccessesPayment(payment);
         } catch (NotificationException e) {
-            throw new TelegramApiException("Can`t send the notification");
+            log.info("Can`t send the notification");
         }
         paymentRepository.save(payment);
     }
@@ -100,7 +101,7 @@ public class PaymentServiceImpl implements PaymentService {
             try {
                 notificationService.sentCancelPayment(payment);
             } catch (NotificationException e) {
-                throw new TelegramApiException("Can`t send the notification");
+                log.info("Can`t send the notification");
             }
             throw new ResponseStatusException(
                     HttpStatus.PAYMENT_REQUIRED, "Your payment was cancelled!");

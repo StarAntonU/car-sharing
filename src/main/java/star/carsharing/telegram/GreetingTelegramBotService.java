@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import star.carsharing.exception.unchecked.TelegramApiException;
@@ -20,7 +19,6 @@ public class GreetingTelegramBotService {
     private String botToken;
     private int lastUpdateId = 0;
 
-    @Scheduled(fixedRate = 5000)
     public void pollTelegramUpdates() {
         String url = String.format("%s%s/getUpdates?offset=%d",
                 TELEGRAM_API_URL, botToken, lastUpdateId + 1);

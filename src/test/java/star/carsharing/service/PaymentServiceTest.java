@@ -24,6 +24,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +39,6 @@ import org.springframework.web.server.ResponseStatusException;
 import star.carsharing.dto.payment.PaymentDto;
 import star.carsharing.dto.payment.PaymentRequestDto;
 import star.carsharing.dto.payment.PaymentResponseDto;
-import star.carsharing.exception.checked.NotificationException;
 import star.carsharing.exception.unchecked.EntityNotFoundException;
 import star.carsharing.exception.unchecked.PaymentException;
 import star.carsharing.mapper.PaymentMapper;
@@ -238,9 +238,10 @@ public class PaymentServiceTest {
         assertEquals(expected, actual.getMessage());
     }
 
+    @SneakyThrows
     @Test
     @DisplayName("Verify method paymentSuccess with correct data")
-    public void paymentSuccess_CorrectData_ReturnStatus() throws NotificationException {
+    public void paymentSuccess_CorrectData_ReturnStatus() {
         String sessionId = "cs_test_a1OwDVFofk5jpPJzElJ2LBrUDD59a1MlhCf1fOpFtkuPni4lORCcW19wo7";
         User user = user(2L, roleCustomer());
         Car car = car(1L, 1);

@@ -23,7 +23,7 @@ public class UserTestUtil {
         user.setFirstName("manager");
         user.setLastName("manager");
         user.setPassword("$2a$12$wdHo5USWTk.k9vdFPupg6uGSzBzxXfTS/Gy2D1ijzxzpoYZ39GZL6");
-        user.setTelegramChatId("1234567890");
+        user.setTelegramChatId(null);
         user.setRoles(Set.of(roleManager()));
         return user;
     }
