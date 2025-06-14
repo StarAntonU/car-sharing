@@ -6,6 +6,9 @@ rentals, user authentication, payment processing, and real-time notifications.
 
 ---
 
+[▶️ Watch the demo video](https://www.loom.com/share/fed29d711e4f4b5f9fc68622be2394ad?sid=3c8f37c6-2308-40dc-a11c-88b7fee7e8d9)
+
+---
 ## Table of contents
 
 [Key Technologies](#key-technologies)
@@ -16,7 +19,11 @@ rentals, user authentication, payment processing, and real-time notifications.
 
 [Database Schema Relationship Diagram](#database-schema-relationship-diagram)
 
-[How to Launch a Spring Boot Application with Maven or Docker](#how-to-launch-a-spring-boot-application-with-maven-or-docker)
+[Fork and Clone a Project on GitHub](#fork-and-clone-a-project-on-gitHub)
+
+[How to Launch a Spring Boot Application with Maven or Docker Compose](#how-to-launch-a-spring-boot-application-with-maven-or-docker-compose)
+
+[All Postman collections](#all-postman-collections)
 
 ---
 
@@ -105,7 +112,7 @@ efficient manner.
 
 **Notification Layer**
 
-- Sends real-time Telegram notifications for key events (e.g., rental the cat, payment status).
+- Sends real-time Telegram notifications for key events (e.g., rental car, payment status).
 
 **Payment Integration**
 
@@ -169,10 +176,41 @@ a distinct set of functionalities.
 
 ---
 
-### How to Launch a Spring Boot Application with Maven or Docker
+###  Fork and Clone a Project on GitHub
+
+Forking creates a personal copy of someone else's repository under your GitHub account.
+
+- [Go to the GitHub page of the repository you want to fork](https://github.com/StarAntonU/car-sharing)
+- Click the "Fork" button in the upper-right corner
+- Select your GitHub account (or organization) to create the fork
+
+  You now have your own copy of the project.
+
+Make sure you have Git installed on your machine
+
+- You can check by running:
+```
+git --version
+```
+
+Cloning downloads your forked project to your local machine so you can run or work on it.
+
+- On your forked repository page (on your GitHub account), click the "Code" button
+- Copy the URL under HTTPS or SSH
+- Open a terminal (or Git Bash) on your computer
+- Run the following command
+```
+git clone https://github.com/StarAntonU/car-sharing.git
+```
+
+[Table of contents](#table-of-contents)
+
+---
+
+### How to Launch a Spring Boot Application with Maven or Docker Compose
 
 Before running the application, ensure the following tools are installed and available:
-- Java (21 or compatible)
+- Java (17 or compatible)
 ```
 java -version
 ```
@@ -180,9 +218,10 @@ java -version
 ```
 mvn -version
 ```
-- Docker
+- Docker & Docker Compose
 ```
 docker --version
+docker compose version
 ```
 Open the Terminal
 - Open a terminal or command prompt on your computer
@@ -225,22 +264,25 @@ mvn spring-boot:run
 Verify the Application is Running
 - If successful, you will see logs ending with something like:
 ```
-Started BookstoreApplication in X.XXX seconds (process running for X.XXX)
+Started CarsharingApplication in X.XXX seconds (process running for X.XXX)
 ```
 
-**Or using Docker to run app**
+**Or Use Docker Compose to run app**
 
-- Build Docker image
+- Run the app with Docker Compose
 ```
-docker build -t carsharing-app:1.0 .
-```
-
-- Run the container
-```
-docker run -p 8088:8080 carsharing-app:1.0
+docker compose up --build
 ```
 
 Now that Spring Boot application is running, you can use Postman (or any other REST client) to test its API endpoints.
+
+[Table of contents](#table-of-contents)
+
+---
+
+### All Postman collections
+
+[Postman collections](car-sharing.postman_collection.json)
 
 [Table of contents](#table-of-contents)
 
