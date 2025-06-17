@@ -9,6 +9,12 @@ rentals, user authentication, payment processing, and real-time notifications.
 [▶️ Watch the demo video](https://www.loom.com/share/fed29d711e4f4b5f9fc68622be2394ad?sid=3c8f37c6-2308-40dc-a11c-88b7fee7e8d9)
 
 ---
+
+You can also test this API yourself using Swagger by accessing the following link:
+
+[Link to Swagger: Car Sharing](http://ec2-44-202-241-97.compute-1.amazonaws.com/api/swagger-ui/index.html)
+
+---
 ## Table of contents
 
 [Key Technologies](#key-technologies)
