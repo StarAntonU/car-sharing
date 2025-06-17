@@ -20,7 +20,7 @@ services:
     depends_on:
       - mysqldb
     restart: on-failure
-    image: book-store
+    image: car-sharing
     build: .
     env_file: ./.env
     ports:
