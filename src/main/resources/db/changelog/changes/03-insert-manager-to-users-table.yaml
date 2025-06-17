@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-manager-to-users-table
+      author: star
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: email, value: "manager@email.com" }
+              - column: { name: first_name, value: "manager" }
+              - column: { name: last_name, value: "manager" }
+              - column: { name: password, value: "$2a$12$wdHo5USWTk.k9vdFPupg6uGSzBzxXfTS/Gy2D1ijzxzpoYZ39GZL6" } #12345678
