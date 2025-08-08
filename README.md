@@ -10,11 +10,6 @@ rentals, user authentication, payment processing, and real-time notifications.
 
 ---
 
-You can also test this API yourself using Swagger by accessing the following link:
-
-[Link to Swagger: Car Sharing](http://ec2-44-202-241-97.compute-1.amazonaws.com/api/swagger-ui/index.html)
-
----
 ## Table of contents
 
 [Key Technologies](#key-technologies)
@@ -262,15 +257,16 @@ PAYMENT_CANCEL_URL=your_data
 TELEGRAM_BOT_TOKEN=your_data
 ```
 
+- Create a .jar file
+```
+mvn clean package
+```
+
 Run the Application Using Maven
 - Use the following command to launch the Spring Boot application:
+
 ```
 mvn spring-boot:run
-```
-Verify the Application is Running
-- If successful, you will see logs ending with something like:
-```
-Started CarsharingApplication in X.XXX seconds (process running for X.XXX)
 ```
 
 **Or Use Docker Compose to run app**
@@ -280,7 +276,22 @@ Started CarsharingApplication in X.XXX seconds (process running for X.XXX)
 docker compose up --build
 ```
 
+Verify the Application is Running
+- If successful, you will see logs ending with something like:
+```
+Started CarsharingApplication in X.XXX seconds (process running for X.XXX)
+```
+
 Now that Spring Boot application is running, you can use Postman (or any other REST client) to test its API endpoints.
+
+
+You can also test this API yourself using Swagger by accessing the following link:
+
+```text
+http://localhost:SPRING_LOCAL_PORT/api/swagger-ui/index.html
+```
+
+---
 
 [Table of contents](#table-of-contents)
 

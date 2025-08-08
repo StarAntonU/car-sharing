@@ -12,13 +12,15 @@ services:
       - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
 
     healthcheck:
-      test: [ "CMD-SHELL", "m_isready -U mysql" ]
-      interval: 30s
-      timeout: 30s
-      retries: 3
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
   app:
     depends_on:
-      - mysqldb
+      mysqldb:
+        condition: service_healthy
     restart: on-failure
     image: car-sharing
     build: .
